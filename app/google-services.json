@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "226473063753",
+    "project_id": "pay-split-6f8c1",
+    "storage_bucket": "pay-split-6f8c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226473063753:android:71f2160458438c5d7d1698",
+        "android_client_info": {
+          "package_name": "com.example.paysplit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUGG-Kpl_yAwoCxdvoxxMXJxXfW7UT4kQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,5 +15,8 @@ class SplashActivity : AppCompatActivity() {
             startActivity(Intent(this,MainActivity::class.java))
             finish()
         }
+        binding.registerBtn.setOnClickListener {
+            startActivity(Intent(this,ActivityRegister::class.java))
+        }
     }
 }

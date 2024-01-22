@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.paysplit" />
+                  <option name="mobileSdkAppId" value="1:226473063753:android:71f2160458438c5d7d1698" />
+                  <option name="projectId" value="pay-split-6f8c1" />
+                  <option name="projectNumber" value="226473063753" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
