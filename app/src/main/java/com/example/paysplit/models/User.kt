@@ -8,9 +8,11 @@ data class User(
     val name: String = "",
     val email: String = "",
     val image: String = "",
+    val upiid : String ="",
     val fcmtoken : String =""
 ) : Parcelable {
     constructor(source: Parcel) : this(
+        source.readString()!!,
         source.readString()!!,
         source.readString()!!,
         source.readString()!!,
@@ -26,6 +28,7 @@ data class User(
         writeString(name)
         writeString(email)
         writeString(image)
+        writeString(upiid)
         writeString(fcmtoken)
 //        writeBoolean(Selected)
     }
