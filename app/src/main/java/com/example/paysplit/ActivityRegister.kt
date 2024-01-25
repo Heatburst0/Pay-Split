@@ -7,8 +7,6 @@ import android.widget.Toast
 import com.example.paysplit.databinding.ActivityRegisterBinding
 import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.models.User
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 

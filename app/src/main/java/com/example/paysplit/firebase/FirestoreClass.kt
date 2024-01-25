@@ -1,5 +1,6 @@
 package com.example.paysplit.firebase
 
+import android.widget.Toast
 import com.example.paysplit.ActivityRegister
 import com.example.paysplit.models.User
 import com.example.paysplit.utils.Constants
@@ -16,6 +17,9 @@ class FirestoreClass {
             .set(userInfo, SetOptions.merge())
             .addOnSuccessListener {
                 activity.userRegisteredSuccess()
+            }
+            .addOnFailureListener {
+                Toast.makeText(activity,it.message!!,Toast.LENGTH_SHORT).show()
             }
 
     }
