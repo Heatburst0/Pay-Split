@@ -30,7 +30,7 @@ class ActivityRegister : AppCompatActivity() {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setHomeAsUpIndicator(R.drawable.ic_white_color_back_24dp)
-            actionBar.title = "Registere"
+            actionBar.title = "Register"
         }
 
         binding.toolbarMyProfileActivity.setNavigationOnClickListener { onBackPressed() }
