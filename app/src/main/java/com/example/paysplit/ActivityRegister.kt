@@ -1,12 +1,18 @@
 package com.example.paysplit
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.LayoutInflater
+import android.view.Window
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import com.example.paysplit.databinding.ActivityRegisterBinding
 import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.models.User
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
@@ -50,17 +56,13 @@ class ActivityRegister : AppCompatActivity() {
                     // If the registration is successfully done
                     if (task.isSuccessful) {
                         auth.currentUser!!.sendEmailVerification().addOnSuccessListener {
-                            Toast.makeText(
-                                this@ActivityRegister,
-                                "Email verification is sent to the provided mail, Please verify",
-                                Toast.LENGTH_SHORT
-                            ).show()
                             val firebaseUser: FirebaseUser = task.result!!.user!!
                             val registeredEmail = firebaseUser.email!!
                             val user = User(
                                 firebaseUser.uid, name, registeredEmail,upiid = upiid
                             )
                             FirestoreClass().registerUser(this@ActivityRegister, user)
+                            showBottomLayout()
                         }
 
                     } else {
@@ -100,5 +102,23 @@ class ActivityRegister : AppCompatActivity() {
     }
     fun userRegisteredSuccess(){
         finish()
+    }
+    private fun showBottomLayout(){
+        val dialog = BottomSheetDialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+
+        val closebtn = findViewById<ImageView>(R.id.close_btn)
+        val signinbtn = findViewById<Button>(R.id.back_signin)
+        closebtn.setOnClickListener {
+            dialog.dismiss()
+        }
+        signinbtn.setOnClickListener {
+            startActivity(Intent(this,SplashActivity::class.java))
+            finish()
+        }
+        dialog.setContentView(layoutInflater.inflate(R.layout.confirm_dialog,null))
+        dialog.setCancelable(false)
+        dialog.show()
     }
 }
