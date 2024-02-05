@@ -78,7 +78,6 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_user"
                 android:drawablePadding="5dp"
-                android:hint="Username"
                 android:inputType="textPersonName"
                 android:textColor="@color/black"
                 android:textColorHint="#636363"
@@ -95,6 +94,7 @@
             android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
             android:backgroundTint="@color/white"
             android:hint="Password"
+            app:endIconMode="password_toggle"
             android:textColorHint="#636363"
             app:boxStrokeColor="@color/black">
 
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_password"
                 android:drawablePadding="5dp"
-                android:hint="Password"
+
                 android:inputType="textPassword"
                 android:textColor="@color/black"
                 android:textColorHint="#636363"

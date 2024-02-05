@@ -24,6 +24,13 @@ class SplashActivity : AppCompatActivity() {
         binding.btnSignIn.setOnClickListener {
             signInRegisteredUser()
         }
+        binding.tvForgotPassword.setOnClickListener {
+            val email = binding.etNameProfile.text.toString()
+            if(email.trim().isEmpty()) binding.etNameProfile.setError("Please enter email first")
+            else auth.sendPasswordResetEmail(email).addOnSuccessListener {
+                Toast.makeText(this,"Password resent request is sent to your email",Toast.LENGTH_SHORT).show()
+            }
+        }
 
     }
     private fun signInRegisteredUser() {

@@ -27,6 +27,7 @@
 
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/create_btn"
         android:layout_width="85dp"
         android:layout_height="85dp"
         android:backgroundTint="@color/blue"

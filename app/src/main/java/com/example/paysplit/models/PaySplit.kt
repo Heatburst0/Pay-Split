@@ -9,7 +9,8 @@ data class PaySplit(
     val createdOn : String="",
     val amount : String="",
     val createdByImg : String="",
-    val creatorUPIID : String =""
+    val creatorUPIID : String ="",
+    val assignedTo : ArrayList<String> = ArrayList()
 ): Parcelable {
     constructor(source: Parcel) : this(
         source.readString()!!,
@@ -17,7 +18,8 @@ data class PaySplit(
         source.readString()!!,
         source.readString()!!,
         source.readString()!!,
-        source.readString()!!
+        source.readString()!!,
+        source.createStringArrayList()!!
     )
 
     override fun describeContents() = 0
@@ -29,6 +31,7 @@ data class PaySplit(
         writeString(amount)
         writeString(createdByImg)
         writeString(creatorUPIID)
+        writeStringList(assignedTo)
 //        writeBoolean(Selected)
     }
 
