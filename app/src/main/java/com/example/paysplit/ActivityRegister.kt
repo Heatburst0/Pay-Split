@@ -1,5 +1,6 @@
 package com.example.paysplit
 
+import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser
 class ActivityRegister : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private val auth : FirebaseAuth = FirebaseAuth.getInstance()
+    private lateinit var confirmDialog : Dialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -26,6 +28,7 @@ class ActivityRegister : AppCompatActivity() {
         setupActionBar()
         binding.btnRegister.setOnClickListener {
             registerUser()
+//            showBottomLayout()
         }
     }
     private fun setupActionBar() {
@@ -62,7 +65,7 @@ class ActivityRegister : AppCompatActivity() {
                                 firebaseUser.uid, name, registeredEmail,upiid = upiid
                             )
                             FirestoreClass().registerUser(this@ActivityRegister, user)
-                            showBottomLayout()
+
                         }
 
                     } else {
@@ -101,24 +104,18 @@ class ActivityRegister : AppCompatActivity() {
         }
     }
     fun userRegisteredSuccess(){
-        finish()
+        showBottomLayout()
     }
     private fun showBottomLayout(){
-        val dialog = BottomSheetDialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-
-
-        val closebtn = findViewById<ImageView>(R.id.close_btn)
-        val signinbtn = findViewById<Button>(R.id.back_signin)
-        closebtn.setOnClickListener {
-            dialog.dismiss()
+        confirmDialog = BottomSheetDialog(this)
+        confirmDialog.setContentView(layoutInflater.inflate(R.layout.confirm_dialog,null))
+        confirmDialog.findViewById<ImageView>(R.id.close_btn).setOnClickListener {
+            confirmDialog.dismiss()
         }
-        signinbtn.setOnClickListener {
-            startActivity(Intent(this,SplashActivity::class.java))
+        confirmDialog.findViewById<Button>(R.id.back_signin).setOnClickListener {
             finish()
         }
-        dialog.setContentView(layoutInflater.inflate(R.layout.confirm_dialog,null))
-        dialog.setCancelable(false)
-        dialog.show()
+        confirmDialog.show()
+
     }
 }

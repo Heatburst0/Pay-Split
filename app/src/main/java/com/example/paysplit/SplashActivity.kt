@@ -17,10 +17,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.btnSignIn.setOnClickListener {
-            startActivity(Intent(this,MainActivity::class.java))
-            finish()
-        }
+
         binding.registerBtn.setOnClickListener {
             startActivity(Intent(this,ActivityRegister::class.java))
         }
