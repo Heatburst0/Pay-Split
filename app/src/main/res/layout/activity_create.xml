@@ -5,16 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CreateActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_create"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/blue"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="Create"
+            app:titleTextColor="@color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@id/create_btn"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -24,85 +47,93 @@
                 android:layout_marginBottom="10dp"
                 android:elevation="10dp"
                 app:cardCornerRadius="8dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:orientation="vertical"
-                    android:background="@color/white"
                     android:padding="@dimen/my_profile_screen_content_padding">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Details"
                         android:fontFamily="sans-serif-black"
-                        android:textSize="18sp"
+                        android:text="Details"
                         android:textColor="@color/black"
-                        />
+                        android:textSize="16sp" />
+
                     <com.google.android.material.textfield.TextInputLayout
-                        android:layout_marginTop="10dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
-                        app:boxStrokeColor="@color/black"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
+                        android:backgroundTint="@color/white"
                         android:hint="Title of Pay Split"
-                        app:hintTextColor="@color/black"
                         android:textColorHint="@color/black"
-                        android:backgroundTint="@color/white"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd">
+                        app:boxStrokeColor="@color/black"
+                        app:hintTextColor="@color/black">
+
                         <androidx.appcompat.widget.AppCompatEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Title of Pay Split"
-                            android:textColorHint="#636363"
+
                             android:inputType="text"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/black"
+                            android:textColorHint="#636363"
+                            android:textSize="14sp" />
                     </com.google.android.material.textfield.TextInputLayout>
+
                     <com.google.android.material.textfield.TextInputLayout
-                        android:layout_marginTop="10dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
-                        app:boxStrokeColor="@color/black"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
+                        android:backgroundTint="@color/white"
                         android:hint="Description"
-                        app:hintTextColor="@color/black"
                         android:textColorHint="@color/black"
-                        android:backgroundTint="@color/white"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd">
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Description"
-                            android:textColorHint="#636363"
-                            android:inputType="text"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_marginTop="10dp"
-                        android:layout_width="match_parent"
                         app:boxStrokeColor="@color/black"
-                        android:layout_height="wrap_content"
-                        android:hint="Total amount(optional)"
-                        app:hintTextColor="@color/black"
-                        android:textColorHint="@color/black"
-                        android:backgroundTint="@color/white"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd">
+                        app:hintTextColor="@color/black">
+
                         <androidx.appcompat.widget.AppCompatEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Total amount(optional)"
-                            android:textColorHint="#636363"
+
                             android:inputType="text"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/black"
+                            android:textColorHint="#636363"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
+                        android:backgroundTint="@color/white"
+                        android:hint="Total amount(optional)"
+                        android:textColorHint="@color/black"
+                        app:boxStrokeColor="@color/black"
+                        app:hintTextColor="@color/black">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:inputType="text"
+                            android:textColor="@color/black"
+                            android:textColorHint="#636363"
+                            android:textSize="14sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -112,63 +143,73 @@
                 android:layout_marginBottom="10dp"
                 android:elevation="10dp"
                 app:cardCornerRadius="8dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:orientation="vertical"
-                    android:background="@color/white"
                     android:padding="@dimen/my_profile_screen_content_padding">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Add Members"
                         android:fontFamily="sans-serif-black"
-                        android:textSize="18sp"
+                        android:text="Add Members"
                         android:textColor="@color/black"
-                        />
+                        android:textSize="16sp" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:visibility="gone"
-                        tools:visibility="visible"/>
+                        tools:visibility="visible" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center"
+                        android:layout_height="45dp"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/btn_bg2"
+                        android:gravity="center"
                         android:orientation="horizontal">
+
                         <ImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:src="@drawable/baseline_add_24"/>
+                            android:src="@drawable/baseline_add_24" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Add member(s)"
                             android:layout_marginStart="5dp"
-                            android:textSize="18sp"
-                            android:textColor="@color/blue"/>
+                            android:text="Add member(s)"
+                            android:textColor="@color/blue"
+                            android:textSize="18sp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="Create"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="22sp"
-                android:background="@drawable/btn_bg"/>
-        </LinearLayout>
 
+
+        </LinearLayout>
 
     </ScrollView>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/create_btn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/btn_bg"
+        android:text="Create"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
