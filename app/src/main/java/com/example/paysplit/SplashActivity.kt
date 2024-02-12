@@ -1,10 +1,14 @@
 package com.example.paysplit
 
+import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
+
 import com.example.paysplit.databinding.ActivitySplashBinding
 import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.models.User
@@ -25,12 +29,9 @@ class SplashActivity : AppCompatActivity() {
             signInRegisteredUser()
         }
         binding.tvForgotPassword.setOnClickListener {
-            val email = binding.etNameProfile.text.toString()
-            if(email.trim().isEmpty()) binding.etNameProfile.setError("Please enter email first")
-            else auth.sendPasswordResetEmail(email).addOnSuccessListener {
-                Toast.makeText(this,"Password resent request is sent to your email",Toast.LENGTH_SHORT).show()
-            }
+            openDialog()
         }
+
 
     }
     private fun signInRegisteredUser() {
@@ -50,7 +51,7 @@ class SplashActivity : AppCompatActivity() {
                                 "Welcome",
                                 Toast.LENGTH_LONG
                             ).show()
-                            startActivity(Intent(this@SplashActivity,MainActivity::class.java))
+                            signInSuccess()
                         }else{
                             Toast.makeText(
                                 this@SplashActivity,
@@ -83,8 +84,22 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-//    fun signInSuccess(user: User) {
-//        startActivity(Intent(this@SignInActivity, MainActivity::class.java))
-//        this.finish()
-//    }
+    fun signInSuccess() {
+        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+        this.finish()
+    }
+    private fun openDialog(){
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.forgot_password_view)
+        dialog.findViewById<AppCompatButton>(R.id.btn_sendEmailVerify).setOnClickListener {
+            val email = dialog.findViewById<EditText>(R.id.et_email_forgot).text.toString()
+            if(email.trim().isEmpty()) dialog.findViewById<EditText>(R.id.et_email_forgot).setError("Please enter your E-mail")
+            else auth.sendPasswordResetEmail(email).addOnCompleteListener {
+                Toast.makeText(this@SplashActivity,"Password reset mail is sent to your email id",Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+        }
+        dialog.show()
+
+    }
 }
