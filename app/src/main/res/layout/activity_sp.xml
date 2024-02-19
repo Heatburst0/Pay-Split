@@ -79,7 +79,6 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_user"
                 android:drawablePadding="5dp"
-
                 android:inputType="textPersonName"
                 android:textColor="@color/black"
                 android:textColorHint="#636363"

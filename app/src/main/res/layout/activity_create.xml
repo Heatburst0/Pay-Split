@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".CreateActivity">
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -28,21 +29,20 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@id/create_btn"
+        app:layout_constraintBottom_toTopOf="@+id/createPay_btn"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="10dp"
                 android:elevation="10dp"
@@ -69,7 +69,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
+
                         android:backgroundTint="@color/white"
                         android:hint="Title of Pay Split"
                         android:textColorHint="@color/black"
@@ -79,7 +79,6 @@
                         <androidx.appcompat.widget.AppCompatEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-
                             android:inputType="text"
                             android:textColor="@color/black"
                             android:textColorHint="#636363"
@@ -91,7 +90,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
                         android:backgroundTint="@color/white"
                         android:hint="Description"
                         android:textColorHint="@color/black"
@@ -113,7 +111,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
                         android:backgroundTint="@color/white"
                         android:hint="Total amount(optional)"
                         android:textColorHint="@color/black"
@@ -123,7 +120,6 @@
                         <androidx.appcompat.widget.AppCompatEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-
                             android:inputType="text"
                             android:textColor="@color/black"
                             android:textColorHint="#636363"
@@ -176,8 +172,8 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:src="@drawable/baseline_add_24" />
 
                         <TextView
@@ -186,7 +182,7 @@
                             android:layout_marginStart="5dp"
                             android:text="Add member(s)"
                             android:textColor="@color/blue"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -195,21 +191,20 @@
         </LinearLayout>
 
     </ScrollView>
-
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/create_btn"
+        android:id="@+id/createPay_btn"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/btn_bg"
         android:text="Create"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="22sp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
