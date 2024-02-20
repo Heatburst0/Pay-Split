@@ -29,14 +29,13 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
         app:layout_constraintBottom_toTopOf="@+id/createPay_btn"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
@@ -105,26 +104,43 @@
                             android:textColorHint="#636363"
                             android:textSize="14sp" />
                     </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/white"
-                        android:hint="Total amount(optional)"
-                        android:textColorHint="@color/black"
-                        app:boxStrokeColor="@color/black"
-                        app:hintTextColor="@color/black">
-
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:layout_width="match_parent"
+                        android:weightSum="3"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_weight="1.5"
                             android:layout_height="wrap_content"
-                            android:inputType="text"
+                            android:backgroundTint="@color/white"
+                            android:hint="Total amount"
+                            android:textColorHint="@color/black"
+                            app:boxStrokeColor="@color/black"
+                            app:hintTextColor="@color/black">
+
+                            <androidx.appcompat.widget.AppCompatEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"
+                                android:textColor="@color/black"
+                                android:textColorHint="#636363"
+                                android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="1.5"
                             android:textColor="@color/black"
-                            android:textColorHint="#636363"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:textSize="12sp"
+                            android:text="Divide Equally"
+                            android:layout_marginStart="30dp"/>
+
+                    </LinearLayout>
 
 
                 </LinearLayout>
@@ -191,6 +207,7 @@
         </LinearLayout>
 
     </ScrollView>
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/createPay_btn"
         android:layout_width="match_parent"
@@ -205,6 +222,6 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
