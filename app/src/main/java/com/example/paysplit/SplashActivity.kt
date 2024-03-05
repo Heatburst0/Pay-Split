@@ -36,9 +36,9 @@ class SplashActivity : AppCompatActivity() {
             val currentUserID = FirestoreClass().getCurrentUserID()
             // Start the Intro Activity
 
-            if (currentUserID.isNotEmpty())
+            if (currentUserID.isNotEmpty()){
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            finish() // Call this when your activity is done and should be closed.
+            finish()} // Call this when your activity is done and should be closed.
         },2500)
 
     }

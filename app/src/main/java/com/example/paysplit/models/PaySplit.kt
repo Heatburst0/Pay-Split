@@ -7,10 +7,11 @@ data class PaySplit(
     val id : String="",
     val createdBy : String="",
     val createdOn : String="",
-    val amount : String="",
+    val totalamount : String="",
     val createdByImg : String="",
     val creatorUPIID : String ="",
-    val assignedTo : ArrayList<String> = ArrayList()
+    val assignedTo : ArrayList<String> = ArrayList(),
+    val amountMembers : HashMap<String,Int> = HashMap()
 ): Parcelable {
     constructor(source: Parcel) : this(
         source.readString()!!,
@@ -28,10 +29,11 @@ data class PaySplit(
         writeString(id)
         writeString(createdBy)
         writeString(createdOn)
-        writeString(amount)
+        writeString(totalamount)
         writeString(createdByImg)
         writeString(creatorUPIID)
         writeStringList(assignedTo)
+        writeMap(amountMembers)
 //        writeBoolean(Selected)
     }
 

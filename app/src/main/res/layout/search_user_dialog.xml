@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:padding="10dp"
+    android:gravity="center"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Enter the user's E-mail"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/black"/>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_et"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="280dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="@dimen/authentication_screen_til_marginStartEnd"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
+        android:backgroundTint="@color/white"
+        android:hint="Email ID"
+        android:textColorHint="#636363"
+        app:boxStrokeColor="@color/black">
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_email_member"
+            android:layout_width="280dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:inputType="textEmailAddress"
+            android:layout_height="50dp"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_addmember"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="@dimen/my_profile_btn_update_marginTop"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_bg"
+        android:gravity="center"
+        android:paddingTop="@dimen/btn_paddingTopBottom"
+        android:paddingBottom="@dimen/btn_paddingTopBottom"
+        android:text="Add"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+
+</LinearLayout>

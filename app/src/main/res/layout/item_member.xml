@@ -3,52 +3,59 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
+    android:layout_margin="5dp"
     android:background="@drawable/outlined_bg"
     android:orientation="horizontal"
     android:weightSum="3">
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_profile_user_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:id="@+id/iv_member_user_image"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:contentDescription="desc"
         android:src="@drawable/ic_user_place_holder" />
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_weight="1.8"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="5dp"
         android:layout_marginTop="5dp"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/username_member"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Details"
+            android:text="Username"
             android:fontFamily="sans-serif-black"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:textColor="@color/black"
             />
         <TextView
+            android:id="@+id/email_member"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Username"
+            android:text="E mail"
             android:textStyle="normal"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:layout_marginTop="3dp"
             android:textColor="@color/black"
             />
     </LinearLayout>
-    <EditText
-        android:id="@+id/member_amount"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:hint="Amount"/>
+   <TextView
+       android:id="@+id/amount_to_pay"
+       android:layout_width="0dp"
+       android:layout_height="match_parent"
+       android:layout_weight="1"
+       android:text="₹ 0"
+       android:textColor="@color/blue"
+       android:gravity="center"
+       android:textStyle="bold"
+       android:textSize="16sp"/>
     <ImageView
         android:id="@+id/btn_removeMember"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_weight="0.5"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_weight="0.3"
         android:layout_gravity="center"
         android:src="@drawable/ic_remove"/>
 

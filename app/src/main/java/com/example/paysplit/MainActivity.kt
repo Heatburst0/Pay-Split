@@ -1,19 +1,25 @@
 package com.example.paysplit
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.example.paysplit.databinding.ActivityMainBinding
 import com.example.paysplit.fragments.HistoryFragment
 import com.example.paysplit.fragments.HomeFragment
 import com.example.paysplit.fragments.ProfileFragment
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    private var auth : FirebaseAuth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -40,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.bottomNavigationView.itemActiveIndicatorColor = ColorStateList.valueOf(Color.WHITE)
         setupActionBar()
+        binding.navView.setNavigationItemSelectedListener(this)
 
 
     }
@@ -65,5 +72,20 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.drawerLayout.openDrawer(GravityCompat.START)
         }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.signout_btn_drawer->{
+                auth.signOut()
+                val intent = Intent(this, SplashActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+                Toast.makeText(this@MainActivity,"You have signed out",Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
+        return true
     }
 }

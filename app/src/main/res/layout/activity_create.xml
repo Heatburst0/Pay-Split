@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".CreateActivity">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -28,8 +30,9 @@
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:layout_marginTop="15dp"
         app:layout_constraintBottom_toTopOf="@+id/createPay_btn"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
@@ -79,6 +82,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
+
                             android:textColor="@color/black"
                             android:textColorHint="#636363"
                             android:textSize="14sp" />
@@ -173,6 +177,7 @@
                         android:textSize="16sp" />
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_members"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -180,6 +185,7 @@
                         tools:visibility="visible" />
 
                     <LinearLayout
+                        android:id="@+id/addMember_btn"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:layout_marginTop="10dp"
@@ -224,4 +230,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
