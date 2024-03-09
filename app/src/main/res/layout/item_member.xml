@@ -50,7 +50,7 @@
        android:textColor="@color/blue"
        android:gravity="center"
        android:textStyle="bold"
-       android:textSize="16sp"/>
+       android:textSize="14sp"/>
     <ImageView
         android:id="@+id/btn_removeMember"
         android:layout_width="30dp"

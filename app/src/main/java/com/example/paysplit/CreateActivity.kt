@@ -1,12 +1,9 @@
 package com.example.paysplit
 
 import android.app.Dialog
-import android.health.connect.datatypes.units.Length
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
@@ -18,11 +15,11 @@ import com.example.paysplit.models.PaySplitMember
 import com.example.paysplit.models.User
 import com.google.android.material.textfield.TextInputLayout
 
-class CreateActivity : AppCompatActivity() {
+class CreateActivity : BaseActivity() {
     private lateinit var binding : ActivityCreateBinding
     var members : ArrayList<PaySplitMember> = ArrayList()
     private var membersVis : HashSet<String> = HashSet()
-    lateinit var adapterPro : PaySplitMemberAdapter
+    private var totalAmount =0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateBinding.inflate(layoutInflater)
@@ -30,6 +27,9 @@ class CreateActivity : AppCompatActivity() {
         setupActionBar()
         binding.addMemberBtn.setOnClickListener {
             searchDialog()
+        }
+        binding.etTotalAmount.setOnClickListener {
+            openDialogEditTotalAmount()
         }
     }
     private fun setupActionBar() {
@@ -72,21 +72,75 @@ class CreateActivity : AppCompatActivity() {
         binding.rvMembers.visibility = View.VISIBLE
         binding.rvMembers.layoutManager = LinearLayoutManager(this)
         binding.rvMembers.isNestedScrollingEnabled = false
-        val adapter = PaySplitMemberAdapter(this,members)
+        binding.rvMembers.setHasFixedSize(true)
+        val adapter = PaySplitMemberAdapter(this,members,totalAmount)
         binding.rvMembers.adapter = adapter
-        adapterPro=adapter
+//        adapterPro=adapter
         adapter.setOnClickListener(object : PaySplitMemberAdapter.OnClickListener{
             override fun removeUser(position: Int, user: PaySplitMember,list : ArrayList<PaySplitMember>) {
                 Toast.makeText(this@CreateActivity,"Remove user",Toast.LENGTH_SHORT).show()
                 members.removeAt(position)
                 membersVis.remove(user.email)
-                list.removeAt(position)
+                totalAmount
                 adapter.notifyItemRemoved(position)
-//                populateMembers()
+                populateMembers()
+            }
+
+            override fun editamount(pos: Int, lis: ArrayList<PaySplitMember>) {
+                openDialogEditMemberAmount(pos,lis,adapter)
             }
 
 
         })
+    }
+    private fun openDialogEditMemberAmount(pos: Int, list : ArrayList<PaySplitMember>, adapter: PaySplitMemberAdapter){
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.search_user_dialog)
+
+        dialog.findViewById<TextInputLayout>(R.id.tl_et).setHint("Amount")
+        val amountEt = dialog.findViewById<AppCompatEditText>(R.id.et_email_member)
+        amountEt.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+
+
+        dialog.findViewById<AppCompatButton>(R.id.btn_addmember).setText("Done")
+        dialog.findViewById<AppCompatButton>(R.id.btn_addmember).setOnClickListener {
+            val amount = amountEt.text.toString()
+            if(amount.isEmpty()){
+                amountEt.setError("Please fill this")
+            }else{
+//                totalAmount = totalAmount + amount.toDouble() - members.get(pos).amount.toDouble()
+                members.get(pos).amount=amount
+                list[pos].amount=amount
+
+                adapter.notifyItemChanged(pos)
+                dialog.dismiss()
+            }
+        }
+        dialog.show()
+
+    }
+    private fun openDialogEditTotalAmount(){
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.search_user_dialog)
+
+        dialog.findViewById<TextInputLayout>(R.id.tl_et).setHint("Amount")
+        val amountEt = dialog.findViewById<AppCompatEditText>(R.id.et_email_member)
+        amountEt.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+
+
+        dialog.findViewById<AppCompatButton>(R.id.btn_addmember).setText("Done")
+        dialog.findViewById<AppCompatButton>(R.id.btn_addmember).setOnClickListener {
+            val amount = amountEt.text.toString()
+            if(amount.isEmpty()){
+                amountEt.setError("Please fill this")
+            }else{
+                binding.etTotalAmount.setText("₹ $amount")
+                totalAmount = amount.toDouble()
+                if(membersVis.size>0) populateMembers()
+                dialog.dismiss()
+            }
+        }
+        dialog.show()
     }
 
 }

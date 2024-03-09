@@ -2,6 +2,7 @@ package com.example.paysplit.adapters
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,7 +21,8 @@ import com.google.android.material.textfield.TextInputLayout
 
 open class PaySplitMemberAdapter(
     private val context : Context,
-    private val list : ArrayList<PaySplitMember>
+    private val list : ArrayList<PaySplitMember>,
+    private val totalAmount : Double
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     private var onClickListener: OnClickListener? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -42,7 +44,11 @@ open class PaySplitMemberAdapter(
         if(holder is MyViewHolder){
             holder.itemView.findViewById<TextView>(R.id.username_member).text = member.username
             holder.itemView.findViewById<TextView>(R.id.email_member).text = member.email
-            holder.itemView.findViewById<TextView>(R.id.amount_to_pay).text = "₹ ${member.amount}"
+            var toPay  = member.amount.toDouble()
+            if(totalAmount>0.0 && toPay==0.0){
+                toPay = "%.2f".format(totalAmount/list.size).toDouble()
+            }else holder.itemView.findViewById<TextView>(R.id.amount_to_pay).setTextColor(Color.GREEN)
+            holder.itemView.findViewById<TextView>(R.id.amount_to_pay).text = "₹ ${toPay}"
             holder.itemView.findViewById<ImageView>(R.id.btn_removeMember).setOnClickListener {
                 if(onClickListener!=null){
                     onClickListener!!.removeUser(position,member,list)
@@ -50,7 +56,9 @@ open class PaySplitMemberAdapter(
             }
             holder.itemView.setOnClickListener {
 
-                openEditAmountDialog(position)
+                if(onClickListener!=null){
+                    onClickListener!!.editamount(position,list)
+                }
             }
         }
 
@@ -62,31 +70,9 @@ open class PaySplitMemberAdapter(
 
     interface OnClickListener {
         fun removeUser(position: Int, user: PaySplitMember,list: ArrayList<PaySplitMember>)
+        fun editamount(pos : Int,lis : ArrayList<PaySplitMember>)
 
     }
-    private fun openEditAmountDialog(pos: Int){
-        val dialog = Dialog(context)
-        dialog.setContentView(R.layout.search_user_dialog)
 
-        dialog.findViewById<TextInputLayout>(R.id.tl_et).setHint("Amount")
-        val amountEt = dialog.findViewById<AppCompatEditText>(R.id.et_email_member)
-        amountEt.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-
-
-        dialog.findViewById<AppCompatButton>(R.id.btn_addmember).setText("Done")
-        dialog.findViewById<AppCompatButton>(R.id.btn_addmember).setOnClickListener {
-            val amount = amountEt.text.toString()
-            if(amount.isEmpty()){
-                amountEt.setError("Please fill this")
-            }else{
-                (context as CreateActivity).members.get(pos).amount=amount
-                list[pos].amount=amount
-                notifyItemChanged(pos)
-                dialog.dismiss()
-            }
-        }
-        dialog.show()
-
-    }
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

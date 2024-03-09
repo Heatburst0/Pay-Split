@@ -15,7 +15,7 @@ import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.models.User
 import com.google.firebase.auth.FirebaseAuth
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : BaseActivity() {
     private lateinit var binding : ActivitySplashBinding
     private var auth : FirebaseAuth  = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {

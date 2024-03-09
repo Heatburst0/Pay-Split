@@ -115,34 +115,30 @@
                         android:weightSum="3"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1.5"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/white"
-                            android:hint="Total amount"
-                            android:textColorHint="@color/black"
-                            app:boxStrokeColor="@color/black"
-                            app:hintTextColor="@color/black">
-
-                            <androidx.appcompat.widget.AppCompatEditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="text"
-                                android:textColor="@color/black"
-                                android:textColorHint="#636363"
-                                android:textSize="14sp" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:layout_width="0dp"
-                            android:layout_height="50dp"
-                            android:layout_weight="1.5"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:text="Amount to be distributed"
+                            android:gravity="center"
+                            android:textSize="14sp"
                             android:textColor="@color/black"
-                            android:textSize="12sp"
-                            android:text="Divide Equally"
-                            android:layout_marginStart="30dp"/>
+                            android:textStyle="bold"/>
+
+
+                        <TextView
+                            android:id="@+id/et_TotalAmount"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:padding="12dp"
+                            android:text="₹ 0.0"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/blue"
+                            android:gravity="center"
+                            android:background="@drawable/btn_bg2_black"/>
+
 
                     </LinearLayout>
 
@@ -160,7 +156,7 @@
                 android:elevation="10dp"
                 app:cardCornerRadius="8dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -169,6 +165,7 @@
                     android:padding="@dimen/my_profile_screen_content_padding">
 
                     <TextView
+                        android:id="@+id/add_members_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-black"
@@ -181,11 +178,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:layout_below="@id/add_members_tv"
                         android:visibility="gone"
                         tools:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/addMember_btn"
+                        android:layout_below="@id/rv_members"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:layout_marginTop="10dp"
@@ -206,7 +205,7 @@
                             android:textColor="@color/blue"
                             android:textSize="16sp" />
                     </LinearLayout>
-                </LinearLayout>
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
 
