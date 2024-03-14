@@ -57,7 +57,7 @@ open class PaySplitMemberAdapter(
             holder.itemView.setOnClickListener {
 
                 if(onClickListener!=null){
-                    onClickListener!!.editamount(position,list)
+                    onClickListener!!.editamount(position,list,toPay)
                 }
             }
         }
@@ -70,7 +70,7 @@ open class PaySplitMemberAdapter(
 
     interface OnClickListener {
         fun removeUser(position: Int, user: PaySplitMember,list: ArrayList<PaySplitMember>)
-        fun editamount(pos : Int,lis : ArrayList<PaySplitMember>)
+        fun editamount(pos : Int,lis : ArrayList<PaySplitMember>,prevAmount : Double)
 
     }
 

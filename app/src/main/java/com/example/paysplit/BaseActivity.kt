@@ -15,7 +15,7 @@ open class BaseActivity : AppCompatActivity() {
         mProgressDialog.setContentView(R.layout.progress_dialog)
 
 
-
+        mProgressDialog.setCancelable(false)
         //Start the dialog and display it on screen.
         mProgressDialog.show()
     }

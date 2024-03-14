@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
@@ -86,17 +87,17 @@ class CreateActivity : BaseActivity() {
                 populateMembers()
             }
 
-            override fun editamount(pos: Int, lis: ArrayList<PaySplitMember>) {
-                openDialogEditMemberAmount(pos,lis,adapter)
+            override fun editamount(pos: Int, lis: ArrayList<PaySplitMember>,prevAmount: Double) {
+                openDialogEditMemberAmount(pos,lis,adapter,prevAmount)
             }
 
 
         })
     }
-    private fun openDialogEditMemberAmount(pos: Int, list : ArrayList<PaySplitMember>, adapter: PaySplitMemberAdapter){
+    private fun openDialogEditMemberAmount(pos: Int, list : ArrayList<PaySplitMember>, adapter: PaySplitMemberAdapter,prevAmount : Double){
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.search_user_dialog)
-
+        dialog.findViewById<TextView>(R.id.dialog_header).setText("Add extra amount")
         dialog.findViewById<TextInputLayout>(R.id.tl_et).setHint("Amount")
         val amountEt = dialog.findViewById<AppCompatEditText>(R.id.et_email_member)
         amountEt.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
@@ -105,12 +106,13 @@ class CreateActivity : BaseActivity() {
         dialog.findViewById<AppCompatButton>(R.id.btn_addmember).setText("Done")
         dialog.findViewById<AppCompatButton>(R.id.btn_addmember).setOnClickListener {
             val amount = amountEt.text.toString()
-            if(amount.isEmpty()){
+            if(amount.isEmpty() || amount.toDouble()==0.0){
                 amountEt.setError("Please fill this")
             }else{
 //                totalAmount = totalAmount + amount.toDouble() - members.get(pos).amount.toDouble()
-                members.get(pos).amount=amount
-                list[pos].amount=amount
+
+                members.get(pos).amount=(amount.toDouble()+prevAmount).toString()
+                list[pos].amount=(amount.toDouble()+prevAmount).toString()
 
                 adapter.notifyItemChanged(pos)
                 dialog.dismiss()
@@ -122,7 +124,7 @@ class CreateActivity : BaseActivity() {
     private fun openDialogEditTotalAmount(){
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.search_user_dialog)
-
+        dialog.findViewById<TextView>(R.id.dialog_header).setText("Set total amount")
         dialog.findViewById<TextInputLayout>(R.id.tl_et).setHint("Amount")
         val amountEt = dialog.findViewById<AppCompatEditText>(R.id.et_email_member)
         amountEt.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
