@@ -9,10 +9,12 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
 import com.example.paysplit.databinding.ActivityMainBinding
 import com.example.paysplit.fragments.HistoryFragment
 import com.example.paysplit.fragments.HomeFragment
 import com.example.paysplit.fragments.ProfileFragment
+import com.example.paysplit.viewpager.ViewPagerAdapter
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
@@ -20,42 +22,47 @@ import com.google.firebase.auth.FirebaseAuth
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
     private var auth : FirebaseAuth = FirebaseAuth.getInstance()
+    private var prevMenuItem : MenuItem?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val homeFragment = HomeFragment()
-        val historyFragment = HistoryFragment()
-        val profileFragment = ProfileFragment()
-        setFragment(homeFragment)
+        setupActionBar()
+
+        val adapter = ViewPagerAdapter(this)
+        binding.vPager.adapter = adapter
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.home_btn -> {
-                    setFragment(homeFragment)
-                    binding.toolbarMainActivity.title = "Home"
+                    binding.vPager.setCurrentItem(0)
                 }
-                R.id.history_btn ->{
-                    setFragment(historyFragment)
-                    binding.toolbarMainActivity.title
+                R.id.profile_btn ->{
+                    binding.vPager.setCurrentItem(1)
                 }
-                R.id.profile_btn -> setFragment(profileFragment)
+                else->binding.vPager.setCurrentItem(2)
 
             }
             true
         }
         binding.bottomNavigationView.itemActiveIndicatorColor = ColorStateList.valueOf(Color.WHITE)
-        setupActionBar()
+        binding.bottomNavigationView.menu.getItem(0).setChecked(true);
         binding.navView.setNavigationItemSelectedListener(this)
-
+        binding.vPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if(prevMenuItem!=null){
+                    prevMenuItem!!.setChecked(false)
+                }else{
+                    binding.bottomNavigationView.menu.getItem(0).setChecked(false)
+                }
+                binding.bottomNavigationView.menu.getItem(position).setChecked(true)
+                prevMenuItem=binding.bottomNavigationView.menu.getItem(position)
+            }
+        })
 
     }
-    private fun setFragment(frag : Fragment){
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment,frag)
-            commit()
-        }
-    }
+
     private fun setupActionBar() {
 
         setSupportActionBar(binding.toolbarMainActivity)
