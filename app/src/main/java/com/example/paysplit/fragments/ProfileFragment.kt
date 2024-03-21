@@ -7,9 +7,11 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -21,7 +23,10 @@ import com.example.paysplit.databinding.FragmentProfileBinding
 import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.models.User
 import com.example.paysplit.utils.Constants
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.io.IOException
+import java.net.URL
 
 /**
  * A simple [Fragment] subclass.
@@ -29,10 +34,11 @@ import java.io.IOException
  * create an instance of this fragment.
  */
 class ProfileFragment : Fragment() {
-
+    private lateinit var mUserDetails : User
     private var mSelectedImageFileUri: Uri? = null
     private lateinit var binding : FragmentProfileBinding
     private var dataCollected = false
+    private var mProfileImageURL : String=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentProfileBinding.inflate(layoutInflater)
@@ -40,6 +46,13 @@ class ProfileFragment : Fragment() {
             (activity as MainActivity).showProgressDialog()
             FirestoreClass().loadUserData(this)
             dataCollected=true
+        }else{
+            Glide
+                .with(this@ProfileFragment)
+                .load(mUserDetails.image)
+                .centerCrop()
+                .placeholder(R.drawable.ic_user_place_holder)
+                .into(binding.ivProfileUserImage)
         }
     }
 
@@ -67,10 +80,17 @@ class ProfileFragment : Fragment() {
                 )
             }
         }
+        binding.btnUpdateProfile.setOnClickListener {
+            (activity as MainActivity).showProgressDialog()
+            if(mSelectedImageFileUri!=null){
+                uploadImage()
+            }else updateUserProfileData()
+        }
         return binding.root
     }
     fun setUserdata(user : User){
         (activity as MainActivity).cancelDialog()
+        mUserDetails = user
         binding.etNameProfile.setText(user.name)
         binding.etEmailProfile.setText(user.email)
         binding.etUpiid.setText(user.upiid)
@@ -83,6 +103,51 @@ class ProfileFragment : Fragment() {
                 .into(binding.ivProfileUserImage)
         }
     }
+
+    fun uploadImage(){
+        val ext = MimeTypeMap.getSingleton()
+            .getExtensionFromMimeType((activity as MainActivity).contentResolver.getType(mSelectedImageFileUri!!))
+        Toast.makeText(this.activity,"Success upload",Toast.LENGTH_SHORT).show()
+        val storageRef : StorageReference = FirebaseStorage.getInstance().reference.child(
+            "user_image"+System.currentTimeMillis()+"."+
+            ext
+        )
+        storageRef.putFile(mSelectedImageFileUri!!).addOnSuccessListener {
+            Log.e(
+                "Firebase Image URL",
+                it.metadata!!.reference!!.downloadUrl.toString()
+            )
+            it.metadata!!.reference!!.downloadUrl
+                .addOnSuccessListener { uri ->
+                    Log.e("Downloadable Image URL", uri.toString())
+                    // assign the image url to the variable.
+                    mProfileImageURL = uri.toString()
+                    updateUserProfileData()
+                }
+
+        }
+    }
+
+    private fun updateUserProfileData() {
+
+        val userHashMap = HashMap<String, Any>()
+        if (mProfileImageURL.isNotEmpty() && mProfileImageURL != mUserDetails.image) {
+            userHashMap["image"] = mProfileImageURL
+        }
+
+        if (binding.etNameProfile.text.toString() != mUserDetails.name) {
+            userHashMap["name"] = binding.etNameProfile.text.toString()
+        }
+
+        if (binding.etUpiid.text.toString() != mUserDetails.upiid) {
+
+            userHashMap["upiid"] = binding.etUpiid.text.toString()
+        }
+
+        // Update the data in the database.
+        FirestoreClass().updateUserProfileData(this, userHashMap)
+        FirestoreClass().loadUserData(this)
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK
@@ -90,7 +155,7 @@ class ProfileFragment : Fragment() {
             && data!!.data != null
         ) {
             // The uri of selection image from phone storage.
-            Toast.makeText(activity,"Yesss",Toast.LENGTH_SHORT).show()
+
             mSelectedImageFileUri = data.data!!
 
             try {

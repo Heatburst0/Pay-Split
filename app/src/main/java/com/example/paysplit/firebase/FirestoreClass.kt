@@ -73,4 +73,26 @@ class FirestoreClass {
                 Toast.makeText(fragement.activity,"Failed",Toast.LENGTH_SHORT).show()
             }
     }
+    fun updateUserProfileData(fragement: ProfileFragment, userHashMap: HashMap<String, Any>) {
+        mFireStore.collection(Constants.Users) // Collection Name
+            .document(getCurrentUserID()) // Document ID
+            .update(userHashMap) // A hashmap of fields which are to be updated.
+            .addOnSuccessListener {
+                // Profile data is updated successfully.
+                Log.e(fragement.javaClass.simpleName, "Profile Data updated successfully!")
+
+                Toast.makeText(fragement.activity, "Profile updated successfully!", Toast.LENGTH_SHORT).show()
+                (fragement.activity as MainActivity).cancelDialog()
+                // Notify the success result.
+
+            }
+            .addOnFailureListener { e ->
+                (fragement.activity as MainActivity).cancelDialog()
+                Log.e(
+                    fragement.javaClass.simpleName,
+                    "Error while updating profile.",
+                    e
+                )
+            }
+    }
 }
