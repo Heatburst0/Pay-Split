@@ -73,6 +73,24 @@ class FirestoreClass {
                 Toast.makeText(fragement.activity,"Failed",Toast.LENGTH_SHORT).show()
             }
     }
+    fun loadUserData(activity: MainActivity) {
+
+        // Here we pass the collection name from which we wants the data.
+        mFireStore.collection(Constants.Users)
+            // The document id to get the Fields of user.
+            .document(getCurrentUserID())
+            .get()
+            .addOnSuccessListener { document ->
+                Log.e(activity.javaClass.simpleName, document.toString())
+
+                // Here we have received the document snapshot which is converted into the User Data model object.
+                val loggedInUser = document.toObject(User::class.java)!!
+                activity.setUserdata(loggedInUser)
+            }.addOnFailureListener {
+                (activity).cancelDialog()
+                Toast.makeText(activity,"Failed",Toast.LENGTH_SHORT).show()
+            }
+    }
     fun updateUserProfileData(fragement: ProfileFragment, userHashMap: HashMap<String, Any>) {
         mFireStore.collection(Constants.Users) // Collection Name
             .document(getCurrentUserID()) // Document ID

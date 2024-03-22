@@ -6,14 +6,19 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.example.paysplit.databinding.ActivityMainBinding
+import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.fragments.HistoryFragment
 import com.example.paysplit.fragments.HomeFragment
 import com.example.paysplit.fragments.ProfileFragment
+import com.example.paysplit.models.User
 import com.example.paysplit.viewpager.ViewPagerAdapter
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -29,7 +34,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setContentView(binding.root)
 
         setupActionBar()
-
+        FirestoreClass().loadUserData(this)
         val adapter = ViewPagerAdapter(this)
         binding.vPager.adapter = adapter
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
@@ -94,5 +99,18 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+    fun setUserdata(user : User){
+        val hv = binding.navView.getHeaderView(0)
+        hv.findViewById<TextView>(R.id.username_header).text = user.name
+        hv.findViewById<TextView>(R.id.upiid_header).text = "UPI id - ${user.upiid}"
+        if(user.image.isNotEmpty()){
+            Glide
+                .with(this)
+                .load(user.image)
+                .centerCrop()
+                .placeholder(R.drawable.ic_user_place_holder)
+                .into(hv.findViewById<ImageView>(R.id.iv_header_img))
+        }
     }
 }
