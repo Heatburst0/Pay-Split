@@ -5,10 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.paysplit.CreateActivity
+import com.example.paysplit.MainActivity
 import com.example.paysplit.R
+import com.example.paysplit.adapters.PaySplitAdapter
 import com.example.paysplit.databinding.FragmentHomeBinding
+import com.example.paysplit.firebase.FirestoreClass
+import com.example.paysplit.models.PaySplit
+import com.example.paysplit.models.User
 
 /**
  * A simple [Fragment] subclass.
@@ -17,11 +24,14 @@ import com.example.paysplit.databinding.FragmentHomeBinding
  */
 class HomeFragment : Fragment() {
     private lateinit var binding : FragmentHomeBinding
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var loggedinUser : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding  = FragmentHomeBinding.inflate(layoutInflater)
+//        FirestoreClass().loadUserData(this)
+//        FirestoreClass().getPaySplits(this,loggedinUser.email)
+        FirestoreClass().lodo(this)
     }
 
     override fun onCreateView(
@@ -29,14 +39,27 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        binding  = FragmentHomeBinding.inflate(inflater,container,false)
+
 
         binding.createBtn.setOnClickListener {
-            startActivity(Intent(activity,CreateActivity::class.java))
+            val intent = Intent(activity,CreateActivity::class.java)
+            intent.putExtra("user",(activity as MainActivity).loggedinUser)
+            startActivity(intent)
         }
+
         return binding.root
     }
-
-    companion object {
+    fun setPaySplits(list : ArrayList<PaySplit>){
+        if(list.size>0){
+            binding.revPaysplitsHome.visibility = View.VISIBLE
+            val adapter = PaySplitAdapter(activity as MainActivity,this,list,loggedinUser)
+            binding.revPaysplitsHome.layoutManager = LinearLayoutManager(activity as MainActivity)
+            binding.revPaysplitsHome.setHasFixedSize(true)
+            binding.revPaysplitsHome.adapter = adapter
+        }
+    }
+    fun setUser(user : User){
+        loggedinUser = user
+        FirestoreClass().getPaySplits(this,loggedinUser.email)
     }
 }

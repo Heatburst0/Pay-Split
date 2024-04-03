@@ -2,15 +2,19 @@ package com.example.paysplit.firebase
 
 import android.util.Log
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.paysplit.ActivityRegister
 import com.example.paysplit.CreateActivity
 import com.example.paysplit.MainActivity
+import com.example.paysplit.fragments.HomeFragment
 import com.example.paysplit.fragments.ProfileFragment
+import com.example.paysplit.models.PaySplit
 import com.example.paysplit.models.User
 import com.example.paysplit.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.toObject
 
 class FirestoreClass {
     private val mFireStore = FirebaseFirestore.getInstance()
@@ -55,7 +59,7 @@ class FirestoreClass {
                 Log.e(activity.javaClass.simpleName, "Error while getting member.", e)
             }
     }
-    fun loadUserData(fragement: ProfileFragment) {
+    fun loadUserData(fragement: Fragment) {
 
         // Here we pass the collection name from which we wants the data.
         mFireStore.collection(Constants.Users)
@@ -67,7 +71,10 @@ class FirestoreClass {
 
                 // Here we have received the document snapshot which is converted into the User Data model object.
                 val loggedInUser = document.toObject(User::class.java)!!
-                fragement.setUserdata(loggedInUser)
+                if(fragement is ProfileFragment)
+                    fragement.setUserdata(loggedInUser)
+                else if(fragement is HomeFragment)
+                    fragement.setUser(loggedInUser)
             }.addOnFailureListener {
                 (fragement.activity as MainActivity).cancelDialog()
                 Toast.makeText(fragement.activity,"Failed",Toast.LENGTH_SHORT).show()
@@ -111,6 +118,50 @@ class FirestoreClass {
                     "Error while updating profile.",
                     e
                 )
+            }
+    }
+    fun addPaySplit(activity : CreateActivity,ps : PaySplit){
+        mFireStore.collection(Constants.paysplits)
+            .document()
+            .set(ps, SetOptions.merge())
+            .addOnSuccessListener {
+                Log.e(activity.javaClass.simpleName, "PaySplit created successfully.")
+                activity.addPaySplitSuccess()
+
+            }
+            .addOnFailureListener {
+                Log.e(activity.javaClass.simpleName,it.message.toString())
+                Toast.makeText(activity,"Failed to create PaySplit",Toast.LENGTH_SHORT).show()
+            }
+    }
+    fun getPaySplits(fragement: HomeFragment,email : String){
+        mFireStore.collection(Constants.paysplits)
+            .whereArrayContains(Constants.assignedTo,email)
+            .get()
+            .addOnSuccessListener {
+                Log.e(fragement.javaClass.simpleName, it.documents.toString())
+                val list : ArrayList<PaySplit> = ArrayList()
+                for(i in it.documents){
+                    val ps = i.toObject(PaySplit::class.java)!!
+                    ps.id = i.id
+                    list.add(ps)
+                }
+                fragement.setPaySplits(list)
+
+
+            }.addOnFailureListener {
+                Toast.makeText(fragement.activity,"Failed",Toast.LENGTH_SHORT).show()
+                Log.e("Error paysplit",it.message.toString())
+            }
+    }
+    fun lodo(fragement: HomeFragment){
+        mFireStore.collection(Constants.Users)
+            .document(getCurrentUserID())
+            .get()
+            .addOnSuccessListener {
+                val loggedInUser = it.toObject(User::class.java)!!
+                fragement.setUser(loggedInUser)
+
             }
     }
 }

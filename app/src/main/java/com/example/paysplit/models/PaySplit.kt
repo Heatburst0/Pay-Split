@@ -4,45 +4,13 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class PaySplit(
-    val id : String="",
-    val createdBy : String="",
+    var id : String="",
+    val title : String="",
+    val createdBy : User=User(),
     val createdOn : String="",
-    val totalamount : String="",
-    val createdByImg : String="",
-    val creatorUPIID : String ="",
+    val totalamount : Double=0.0,
     val assignedTo : ArrayList<String> = ArrayList(),
-    val amountMembers : HashMap<String,Int> = HashMap()
-): Parcelable {
-    constructor(source: Parcel) : this(
-        source.readString()!!,
-        source.readString()!!,
-        source.readString()!!,
-        source.readString()!!,
-        source.readString()!!,
-        source.readString()!!,
-        source.createStringArrayList()!!
-    )
+    val amountMembers : HashMap<String,Double> = HashMap()
+)
 
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeString(id)
-        writeString(createdBy)
-        writeString(createdOn)
-        writeString(totalamount)
-        writeString(createdByImg)
-        writeString(creatorUPIID)
-        writeStringList(assignedTo)
-        writeMap(amountMembers)
-//        writeBoolean(Selected)
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<PaySplit> = object : Parcelable.Creator<PaySplit> {
-            override fun createFromParcel(source: Parcel): PaySplit = PaySplit(source)
-            override fun newArray(size: Int): Array<PaySplit?> = arrayOfNulls(size)
-        }
-    }
-}
 

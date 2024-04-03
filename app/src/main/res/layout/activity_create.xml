@@ -82,7 +82,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-
+                            android:id="@+id/title_paysplit"
                             android:textColor="@color/black"
                             android:textColorHint="#636363"
                             android:textSize="14sp" />

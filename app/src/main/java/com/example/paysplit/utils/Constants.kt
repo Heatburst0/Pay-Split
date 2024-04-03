@@ -9,6 +9,8 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 
 object Constants {
     const val Users : String  ="Users"
+    const val paysplits : String ="PaySplits"
+    const val assignedTo : String = "assignedTo"
     fun showImageChooser(activity: Activity) {
         // An intent for launching the image selection of phone storage.
         val galleryIntent = Intent(

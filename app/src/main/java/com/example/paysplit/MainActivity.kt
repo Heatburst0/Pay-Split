@@ -18,6 +18,7 @@ import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.fragments.HistoryFragment
 import com.example.paysplit.fragments.HomeFragment
 import com.example.paysplit.fragments.ProfileFragment
+import com.example.paysplit.models.PaySplit
 import com.example.paysplit.models.User
 import com.example.paysplit.viewpager.ViewPagerAdapter
 import com.google.android.material.navigation.NavigationView
@@ -28,6 +29,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private lateinit var binding: ActivityMainBinding
     private var auth : FirebaseAuth = FirebaseAuth.getInstance()
     private var prevMenuItem : MenuItem?=null
+    lateinit var loggedinUser : User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -66,6 +68,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         })
 
+
     }
 
     private fun setupActionBar() {
@@ -102,6 +105,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
     fun setUserdata(user : User){
         val hv = binding.navView.getHeaderView(0)
+        loggedinUser = user
         hv.findViewById<TextView>(R.id.username_header).text = user.name
         hv.findViewById<TextView>(R.id.upiid_header).text = "UPI id - ${user.upiid}"
         if(user.image.isNotEmpty()){
@@ -112,5 +116,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 .placeholder(R.drawable.ic_user_place_holder)
                 .into(hv.findViewById<ImageView>(R.id.iv_header_img))
         }
+//        FirestoreClass().getPaySplits(this,loggedinUser.email)
     }
+
 }
