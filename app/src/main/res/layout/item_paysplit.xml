@@ -26,6 +26,7 @@
                 android:id="@+id/payplit_img"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:padding="5dp"
                 android:contentDescription="desc"
                 android:background="@drawable/circular_img_bg"
                 android:src="@drawable/ic_user_place_holder" />
@@ -79,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:text="When"
                     android:textStyle="italic|bold"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:layout_marginTop="3dp"
                     android:textColor="@color/black"
                     />

@@ -11,6 +11,7 @@ object Constants {
     const val Users : String  ="Users"
     const val paysplits : String ="PaySplits"
     const val assignedTo : String = "assignedTo"
+    const val apiKey : String ="AAAANLrYtUk:APA91bGbg8eY0XdymqrFOY_eTDTHL7uHynwJAIPqq3lGG_YgZV47y2nbjdDK7Ethe7VRNK3ozfalOprDZI2s85FE14T3N1d1dsMtCp6UbcW07BV6jTemt3EM6BsyxTktHP31b-nojGWu"
     fun showImageChooser(activity: Activity) {
         // An intent for launching the image selection of phone storage.
         val galleryIntent = Intent(

@@ -83,8 +83,6 @@ open class PaySplitAdapter(
 
                     paybtn.startAnimation(a)
                 }else{
-//                    paybtn.visibility = View.VISIBLE
-//                    if (!mIsViewExpanded) {
                         paybtn.setVisibility(View.VISIBLE)
                         paybtn.setEnabled(true)
 //                        mIsViewExpanded = true

@@ -120,6 +120,25 @@ class FirestoreClass {
                 )
             }
     }
+    fun updateUserProfileData(activity: MainActivity, userHashMap: HashMap<String, Any>) {
+        mFireStore.collection(Constants.Users) // Collection Name
+            .document(getCurrentUserID()) // Document ID
+            .update(userHashMap) // A hashmap of fields which are to be updated.
+            .addOnSuccessListener {
+                // Profile data is updated successfully.
+                Log.e(activity.javaClass.simpleName, "Profile Data updated successfully!")
+                Toast.makeText(activity,"FCM Token set",Toast.LENGTH_SHORT).show()
+
+            }
+            .addOnFailureListener { e ->
+
+                Log.e(
+                    activity.javaClass.simpleName,
+                    "Error while updating profile.",
+                    e
+                )
+            }
+    }
     fun addPaySplit(activity : CreateActivity,ps : PaySplit){
         mFireStore.collection(Constants.paysplits)
             .document()

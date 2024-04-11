@@ -32,14 +32,18 @@ class SplashActivity : BaseActivity() {
         binding.tvForgotPassword.setOnClickListener {
             openDialog()
         }
-        Handler().postDelayed({
+        if(intent.extras!=null){
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            finish()
+        }
+        else Handler().postDelayed({
             val currentUserID = FirestoreClass().getCurrentUserID()
             // Start the Intro Activity
 
             if (currentUserID.isNotEmpty()){
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             finish()} // Call this when your activity is done and should be closed.
-        },2500)
+        },1000)
 
     }
     private fun signInRegisteredUser() {
