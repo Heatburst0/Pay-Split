@@ -174,8 +174,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         try{
             val jsonobj : JSONObject = JSONObject()
             val notiObj : JSONObject = JSONObject()
-            notiObj.put("title","Chal be chal")
-            notiObj.put("body","Dekh raha h kya")
+            notiObj.put("title","You have been added to a Pay Split")
+            notiObj.put("body","Krishna added you to a Pay Split")
+
 //            notiObj.put("sound","default")
 
             val dataObj : JSONObject = JSONObject()
