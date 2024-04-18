@@ -3,6 +3,7 @@ package com.example.paysplit
 import android.app.Dialog
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -15,12 +16,23 @@ import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.models.PaySplit
 import com.example.paysplit.models.PaySplitMember
 import com.example.paysplit.models.User
+import com.example.paysplit.utils.Constants
 import com.google.android.material.textfield.TextInputLayout
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
 
 class CreateActivity : BaseActivity() {
     private lateinit var binding : ActivityCreateBinding
     var members : ArrayList<PaySplitMember> = ArrayList()
     private var membersVis : HashSet<String> = HashSet()
+    private var usersToken : ArrayList<String> = ArrayList()
     private var totalAmount =0.0
     private lateinit var loggedinUser: User
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +83,9 @@ class CreateActivity : BaseActivity() {
         if(membersVis.contains(user!!.email)){
             Toast.makeText(this,"user already added",Toast.LENGTH_SHORT).show()
         }
-        else {Toast.makeText(this,"user found",Toast.LENGTH_SHORT).show()
+        else {
+            Toast.makeText(this,"user found",Toast.LENGTH_SHORT).show()
+            usersToken.add(user.fcmtoken)
         val member = PaySplitMember(user.id,user.name, user.email,"0",user.image)
         membersVis.add(user.email)
         members.add(member)
@@ -90,6 +104,7 @@ class CreateActivity : BaseActivity() {
             override fun removeUser(position: Int, user: PaySplitMember,list : ArrayList<PaySplitMember>) {
                 Toast.makeText(this@CreateActivity,"Remove user",Toast.LENGTH_SHORT).show()
                 members.removeAt(position)
+                usersToken.removeAt(position)
                 membersVis.remove(user.email)
                 totalAmount
                 adapter.notifyItemRemoved(position)
@@ -134,6 +149,9 @@ class CreateActivity : BaseActivity() {
 
     fun addPaySplitSuccess(){
         cancelDialog()
+        for(i in usersToken){
+            sendNotification(i)
+        }
         finish()
     }
     private fun openDialogEditMemberAmount(pos: Int, list : ArrayList<PaySplitMember>, adapter: PaySplitMemberAdapter,prevAmount : Double){
@@ -185,6 +203,49 @@ class CreateActivity : BaseActivity() {
             }
         }
         dialog.show()
+    }
+
+    //Notification work
+    fun sendNotification(fcmtoken : String){
+        try{
+            val jsonobj= JSONObject()
+            val notiObj= JSONObject()
+            notiObj.put("title","You have been added to a Pay Split")
+            notiObj.put("body","${loggedinUser.name} added you to a Pay Split")
+
+            val dataObj : JSONObject = JSONObject()
+            dataObj.put("id",loggedinUser.id)
+            jsonobj.put("notification",notiObj)
+            jsonobj.put("data",dataObj)
+            jsonobj.put("to",fcmtoken)
+            callApi(jsonobj)
+        }catch (e : Exception){
+            Log.e("Error Notify",e.message.toString())
+            Toast.makeText(this@CreateActivity,"Error",Toast.LENGTH_SHORT).show()
+
+        }
+
+    }
+    fun callApi(jsonobj : JSONObject){
+        val JSON : okhttp3.MediaType = "application/json; charset=utf-8".toMediaType()
+        val client = OkHttpClient()
+        val url ="https://fcm.googleapis.com/fcm/send"
+        val body = RequestBody.create(JSON,jsonobj.toString())
+        val request : Request = Request.Builder()
+            .url(url)
+            .post(body)
+            .header("Authorization","Bearer ${Constants.apiKey}")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Toast.makeText(this@CreateActivity,"Failed",Toast.LENGTH_SHORT).show()
+            }
+            override fun onResponse(call: Call, response: Response) {
+            }
+        })
+
+
     }
 
 }

@@ -16,6 +16,10 @@ import com.example.paysplit.databinding.FragmentHomeBinding
 import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.models.PaySplit
 import com.example.paysplit.models.User
+import dev.shreyaspatil.easyupipayment.EasyUpiPayment
+import dev.shreyaspatil.easyupipayment.listener.PaymentStatusListener
+import dev.shreyaspatil.easyupipayment.model.PaymentApp
+import dev.shreyaspatil.easyupipayment.model.TransactionDetails
 
 /**
  * A simple [Fragment] subclass.
@@ -25,7 +29,7 @@ import com.example.paysplit.models.User
 class HomeFragment : Fragment() {
     private lateinit var binding : FragmentHomeBinding
     private lateinit var loggedinUser : User
-
+    private lateinit var payeeUPIid : String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding  = FragmentHomeBinding.inflate(layoutInflater)
@@ -56,7 +60,45 @@ class HomeFragment : Fragment() {
             binding.revPaysplitsHome.layoutManager = LinearLayoutManager(activity as MainActivity)
             binding.revPaysplitsHome.setHasFixedSize(true)
             binding.revPaysplitsHome.adapter = adapter
+            adapter.setOnClickListener(object : PaySplitAdapter.OnClickListener{
+                override fun onPayButton(createdby : User, amount: HashMap<String, Double>) {
+                    makePayment(createdby.name,createdby.upiid,amount[loggedinUser.id].toString())
+                }
+
+            })
         }
+    }
+    private fun makePayment(name : String,upi : String,amount : String){
+
+        val transcId = System.currentTimeMillis().toString()
+        val desc = "Easy UPI payment by Pay Split"
+
+        val easyUpiPayment = EasyUpiPayment(activity as MainActivity) {
+            this.paymentApp = PaymentApp.ALL
+            this.payeeVpa = upi
+            this.payeeName = name
+            this.transactionId = transcId
+            this.transactionRefId = transcId
+            this.payeeMerchantCode = transcId
+            this.description = desc
+            this.amount = amount
+        }
+        // END INITIALIZATION
+
+        // Register Listener for Events
+        easyUpiPayment.setPaymentStatusListener(object : PaymentStatusListener{
+            override fun onTransactionCancelled() {
+
+            }
+
+            override fun onTransactionCompleted(transactionDetails: TransactionDetails) {
+
+            }
+
+        })
+
+        // Start payment / transaction
+        easyUpiPayment.startPayment()
     }
     fun setUser(user : User){
         loggedinUser = user

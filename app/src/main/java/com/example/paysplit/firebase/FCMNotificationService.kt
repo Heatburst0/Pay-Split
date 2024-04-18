@@ -7,12 +7,15 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.paysplit.MainActivity
 import com.example.paysplit.R
 import com.example.paysplit.SplashActivity
+import com.example.paysplit.fragments.HomeFragment
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import okhttp3.internal.notify
 
 
 class FCMNotificationService : FirebaseMessagingService() {

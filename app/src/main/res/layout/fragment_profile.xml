@@ -93,6 +93,7 @@
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/ic_email"
                         android:drawablePadding="5dp"
+                        android:focusableInTouchMode="false"
                         android:inputType="textEmailAddress"
                         android:textColor="@color/black"
                         android:textColorHint="#636363"

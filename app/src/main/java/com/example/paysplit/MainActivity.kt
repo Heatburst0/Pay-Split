@@ -164,54 +164,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 .placeholder(R.drawable.ic_user_place_holder)
                 .into(hv.findViewById<ImageView>(R.id.iv_header_img))
         }
-        sendNotification()
-    }
-
-
-
-    //Notification code
-    fun sendNotification(){
-        try{
-            val jsonobj : JSONObject = JSONObject()
-            val notiObj : JSONObject = JSONObject()
-            notiObj.put("title","You have been added to a Pay Split")
-            notiObj.put("body","Krishna added you to a Pay Split")
-
-//            notiObj.put("sound","default")
-
-            val dataObj : JSONObject = JSONObject()
-            dataObj.put("id",loggedinUser.id)
-            jsonobj.put("notification",notiObj)
-            jsonobj.put("data",dataObj)
-            jsonobj.put("to",loggedinUser.fcmtoken)
-            callApi(jsonobj)
-        }catch (e : Exception){
-            Log.e("Error Notify",e.message.toString())
-            Toast.makeText(this@MainActivity,"Error",Toast.LENGTH_SHORT).show()
-
-        }
 
     }
-    fun callApi(jsonobj : JSONObject){
-        val JSON : okhttp3.MediaType = "application/json; charset=utf-8".toMediaType()
-        val client = OkHttpClient()
-        val url ="https://fcm.googleapis.com/fcm/send"
-        val body = RequestBody.create(JSON,jsonobj.toString())
-        val request : Request = Request.Builder()
-            .url(url)
-            .post(body)
-            .header("Authorization","Bearer ${Constants.apiKey}")
-            .build()
-        Handler().postDelayed({
-            client.newCall(request).enqueue(object : Callback{
-                override fun onFailure(call: Call, e: IOException) {
-                    Toast.makeText(this@MainActivity,"Failed",Toast.LENGTH_SHORT).show()
-                }
-                override fun onResponse(call: Call, response: Response) {
 
-                }
-            })
-        },2000)
 
-    }
+
+
 }

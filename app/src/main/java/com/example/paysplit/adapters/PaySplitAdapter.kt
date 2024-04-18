@@ -39,6 +39,7 @@ open class PaySplitAdapter(
     override fun getItemCount(): Int {
         return list.size
     }
+    private var onClickListener: OnClickListener? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val ps = list[position]
@@ -104,14 +105,20 @@ open class PaySplitAdapter(
                 valueAnimator.start()
 
             }
+            holder.itemView.findViewById<AppCompatButton>(R.id.btn_pay).setOnClickListener {
+                if(onClickListener!=null){
+                    onClickListener!!.onPayButton(ps.createdBy,ps.amountMembers)
+                }
+            }
 
         }
 
     }
+    fun setOnClickListener(onClickListener: OnClickListener) {
+        this.onClickListener = onClickListener
+    }
     interface OnClickListener{
-        fun onTap(){
-
-        }
+        fun onPayButton(createdby : User,amount : HashMap<String,Double>)
     }
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
