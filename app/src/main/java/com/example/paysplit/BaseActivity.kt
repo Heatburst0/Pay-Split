@@ -1,20 +1,21 @@
 package com.example.paysplit
 
 import android.app.Dialog
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 
 open class BaseActivity : AppCompatActivity() {
     private lateinit var mProgressDialog: Dialog
-    fun showProgressDialog() {
+    fun showProgressDialog(message: String) {
         mProgressDialog = Dialog(this)
 
         /*Set the screen content from a layout resource.
         The resource will be inflated, adding all top-level views to the screen.*/
         mProgressDialog.setContentView(R.layout.progress_dialog)
 
-
+        mProgressDialog.findViewById<TextView>(R.id.txt_msg).text = message
         mProgressDialog.setCancelable(false)
         //Start the dialog and display it on screen.
         mProgressDialog.show()

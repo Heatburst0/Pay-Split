@@ -14,7 +14,6 @@ import com.example.paysplit.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.toObject
 
 class FirestoreClass {
     private val mFireStore = FirebaseFirestore.getInstance()
@@ -73,8 +72,7 @@ class FirestoreClass {
                 val loggedInUser = document.toObject(User::class.java)!!
                 if(fragement is ProfileFragment)
                     fragement.setUserdata(loggedInUser)
-                else if(fragement is HomeFragment)
-                    fragement.setUser(loggedInUser)
+
             }.addOnFailureListener {
                 (fragement.activity as MainActivity).cancelDialog()
                 Toast.makeText(fragement.activity,"Failed",Toast.LENGTH_SHORT).show()
@@ -173,14 +171,13 @@ class FirestoreClass {
                 Log.e("Error paysplit",it.message.toString())
             }
     }
-    fun lodo(fragement: HomeFragment){
+    fun loadDataHomeFragment(fragement: HomeFragment,upi : Boolean){
         mFireStore.collection(Constants.Users)
             .document(getCurrentUserID())
             .get()
             .addOnSuccessListener {
                 val loggedInUser = it.toObject(User::class.java)!!
-                fragement.setUser(loggedInUser)
-
+                fragement.setUser(loggedInUser,upi)
             }
     }
 }

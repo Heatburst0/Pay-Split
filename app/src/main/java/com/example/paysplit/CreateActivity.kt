@@ -136,7 +136,7 @@ class CreateActivity : BaseActivity() {
                 return
             }
             val paysplit = PaySplit(title=title,createdBy=loggedinUser, createdOn = System.currentTimeMillis().toString(), totalamount = totalSum, assignedTo = assignedTo, amountMembers = amountMembers)
-            showProgressDialog()
+            showProgressDialog("Creating Pay Split")
             FirestoreClass().addPaySplit(this,paysplit)
         }else{
             if(title.isEmpty()){

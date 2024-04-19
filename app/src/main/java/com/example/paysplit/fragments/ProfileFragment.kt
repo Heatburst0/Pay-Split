@@ -43,7 +43,7 @@ class ProfileFragment : Fragment() {
         super.onCreate(savedInstanceState)
         binding = FragmentProfileBinding.inflate(layoutInflater)
         if(!dataCollected) {
-            (activity as MainActivity).showProgressDialog()
+            (activity as MainActivity).showProgressDialog("Loading user data")
             FirestoreClass().loadUserData(this)
             dataCollected=true
         }else{
@@ -81,7 +81,7 @@ class ProfileFragment : Fragment() {
             }
         }
         binding.btnUpdateProfile.setOnClickListener {
-            (activity as MainActivity).showProgressDialog()
+            (activity as MainActivity).showProgressDialog("Updating your profile")
             if(mSelectedImageFileUri!=null){
                 uploadImage()
             }else updateUserProfileData()
