@@ -26,7 +26,6 @@ import com.example.paysplit.utils.Constants
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.IOException
-import java.net.URL
 
 /**
  * A simple [Fragment] subclass.
@@ -85,6 +84,7 @@ class ProfileFragment : Fragment() {
             if(mSelectedImageFileUri!=null){
                 uploadImage()
             }else updateUserProfileData()
+
         }
         return binding.root
     }
@@ -108,6 +108,12 @@ class ProfileFragment : Fragment() {
         val ext = MimeTypeMap.getSingleton()
             .getExtensionFromMimeType((activity as MainActivity).contentResolver.getType(mSelectedImageFileUri!!))
         Toast.makeText(this.activity,"Success upload",Toast.LENGTH_SHORT).show()
+        if(mUserDetails.image.isNotEmpty()){
+            val delPrevImage = FirebaseStorage.getInstance().getReferenceFromUrl(mUserDetails.image)
+            delPrevImage.delete().addOnSuccessListener {
+                Log.i("Firebase storage image","Deleted successfully")
+            }
+        }
         val storageRef : StorageReference = FirebaseStorage.getInstance().reference.child(
             "user_image"+System.currentTimeMillis()+"."+
             ext
