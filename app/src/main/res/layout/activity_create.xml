@@ -108,11 +108,18 @@
                             android:textColorHint="#636363"
                             android:textSize="14sp" />
                     </com.google.android.material.textfield.TextInputLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_meals"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
                     <LinearLayout
                         android:id="@+id/additem_btn"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="10dp"
                         android:background="@drawable/btn_bg2"
                         android:gravity="center"
                         android:orientation="horizontal">
@@ -128,7 +135,7 @@
                             android:layout_marginStart="5dp"
                             android:text="Add item/meal"
                             android:textColor="@color/blue"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
 
@@ -192,7 +199,7 @@
                             android:layout_marginStart="5dp"
                             android:text="Add member(s)"
                             android:textColor="@color/blue"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>

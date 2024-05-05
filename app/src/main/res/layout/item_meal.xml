@@ -2,12 +2,15 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp"
     android:layout_margin="5dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="3"
+        android:background="@color/white"
         android:gravity="center_vertical"
         android:padding="10dp">
         <LinearLayout
@@ -18,21 +21,21 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/item_paysplit_title"
+                android:id="@+id/meal_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Meal Title"
                 android:fontFamily="sans-serif-black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@color/black"
                 />
             <TextView
-                android:id="@+id/createdby"
+                android:id="@+id/meal_quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Quantity"
                 android:textStyle="normal"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:layout_marginTop="3dp"
                 android:textColor="@color/black"
                 />
@@ -45,7 +48,7 @@
             android:layout_height="wrap_content"
             android:text="Rs 200"
             android:fontFamily="sans-serif-black"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="@color/blue"
             />
     </LinearLayout>

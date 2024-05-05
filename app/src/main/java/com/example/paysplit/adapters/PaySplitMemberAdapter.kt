@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.paysplit.CreateActivity
 import com.example.paysplit.R
 import com.example.paysplit.models.PaySplitMember
@@ -44,10 +45,7 @@ open class PaySplitMemberAdapter(
         if(holder is MyViewHolder){
             holder.itemView.findViewById<TextView>(R.id.username_member).text = member.username
             holder.itemView.findViewById<TextView>(R.id.email_member).text = member.email
-            var toPay  = member.amount.toDouble()
-            if(totalAmount>0.0 && toPay==0.0){
-                toPay = "%.2f".format(totalAmount/list.size).toDouble()
-            }else holder.itemView.findViewById<TextView>(R.id.amount_to_pay).setTextColor(Color.GREEN)
+            var toPay = "%.2f".format(member.amount).toDouble()
             holder.itemView.findViewById<TextView>(R.id.amount_to_pay).text = "₹ ${toPay}"
             holder.itemView.findViewById<ImageView>(R.id.btn_removeMember).setOnClickListener {
                 if(onClickListener!=null){
@@ -59,6 +57,14 @@ open class PaySplitMemberAdapter(
                 if(onClickListener!=null){
                     onClickListener!!.editamount(position,list,toPay)
                 }
+            }
+            if(member.img.isNotEmpty()){
+                Glide
+                    .with(context)
+                    .load(member.img)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_user_place_holder)
+                    .into(holder.itemView.findViewById(R.id.iv_member_user_image))
             }
         }
 
