@@ -1,12 +1,13 @@
 package com.example.paysplit
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
@@ -14,31 +15,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.paysplit.databinding.ActivityMainBinding
 import com.example.paysplit.firebase.FirestoreClass
-import com.example.paysplit.fragments.HistoryFragment
-import com.example.paysplit.fragments.HomeFragment
-import com.example.paysplit.fragments.ProfileFragment
-import com.example.paysplit.models.PaySplit
 import com.example.paysplit.models.User
-import com.example.paysplit.utils.Constants
 import com.example.paysplit.viewpager.ViewPagerAdapter
 import com.google.android.material.navigation.NavigationView
-import com.google.common.net.MediaType
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.Response
-import org.json.JSONObject
 import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -88,7 +76,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             arrayOf(Manifest.permission.POST_NOTIFICATIONS),
             11
         )
-
+        if(!isOnline(this)){
+            Toast.makeText(this,"Please check your internet connection",Toast.LENGTH_SHORT).show()
+        }
 
     }
 
@@ -166,7 +156,27 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
 
     }
-
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    return true
+                }
+            }
+        }
+        return false
+    }
 
 
 
