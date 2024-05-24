@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.compose.material3.ModalBottomSheet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.paysplit.adapters.MealMembersAdapter
@@ -37,9 +38,9 @@ import java.io.IOException
 class CreateActivity : BaseActivity() {
     private lateinit var binding : ActivityCreateBinding
     var members : ArrayList<PaySplitMember> = ArrayList()
-    private var membersVis : HashSet<String> = HashSet()
+    private var membersVis : HashMap<String,PaySplitMember> = HashMap()
     private var usersToken : ArrayList<String> = ArrayList()
-    private var totalAmount =0.0
+    private var totalAmount = 0.0
     private lateinit var loggedinUser: User
     private lateinit var mealPricePerMember : HashMap<String,Double>
     private val mealsList : ArrayList<Meal> = ArrayList()
@@ -90,14 +91,15 @@ class CreateActivity : BaseActivity() {
         dialog.show()
     }
     fun foundmember(user : User?){
-        if(membersVis.contains(user!!.email)){
+        if(membersVis.contains(user!!.id)){
             Toast.makeText(this,"user already added",Toast.LENGTH_SHORT).show()
         }
         else {
             Toast.makeText(this,"user found",Toast.LENGTH_SHORT).show()
             usersToken.add(user.fcmtoken)
         val member = PaySplitMember(user.id,user.name, user.email,0.0,user.image)
-        membersVis.add(user.email)
+
+        membersVis[user.id]=member
         members.add(member)
         populateMembers()}
 
@@ -115,10 +117,9 @@ class CreateActivity : BaseActivity() {
                 Toast.makeText(this@CreateActivity,"Remove user",Toast.LENGTH_SHORT).show()
                 members.removeAt(position)
                 usersToken.removeAt(position)
-                membersVis.remove(user.email)
-                totalAmount
-                adapter.notifyItemRemoved(position)
-                populateMembers()
+                membersVis.remove(user.id)
+                removeMember(user.id)
+
             }
 
             override fun editamount(pos: Int, lis: ArrayList<PaySplitMember>,prevAmount: Double) {
@@ -127,6 +128,18 @@ class CreateActivity : BaseActivity() {
 
 
         })
+    }
+    private fun removeMember(id : String){
+        for(i in mealsList){
+            if(i.mealPricePerMember.containsKey(id) && i.shared){
+                i.mealPricePerMember.remove(id)
+                for(k in i.mealPricePerMember){
+                    membersVis[k.key]!!.amount-= (i.price*i.quantity)/(i.mealPricePerMember.size+1)
+                    membersVis[k.key]!!.amount+= (i.price*i.quantity)/i.mealPricePerMember.size
+                }
+            }
+        }
+        populateMembers()
     }
     private fun populateMeals(shared : Boolean,meal : Meal){
 
@@ -141,16 +154,13 @@ class CreateActivity : BaseActivity() {
             }
 
         })
-        for(i in members){
-            if(mealPricePerMember.containsKey(i.id)){
-                if(shared){
-                    i.amount+=(meal.price*meal.quantity)/mealPricePerMember.size
-                }else{
-                    i.amount+= meal.price*meal.quantity*meal.mealPricePerMember[i.id]!!
-                }
-                i.pricePerMeal[meal.name]=i.amount
-            }
+        for(i in meal.mealPricePerMember){
+            if(shared)
+                membersVis[i.key]!!.amount+=(meal.price*meal.quantity)/mealPricePerMember.size
+            else
+                membersVis[i.key]!!.amount+=meal.price*meal.quantity*i.value
         }
+//
         populateMembers()
 
 
@@ -170,7 +180,7 @@ class CreateActivity : BaseActivity() {
         val title = binding.titlePaysplit.text.toString()
         if(members.size>0 && title.isNotEmpty()){
             var totalSum=0.0
-            val assignedTo = ArrayList<String>(membersVis)
+//            val assignedTo = ArrayList<String>(membersVis)
             val amountMembers : HashMap<String,Double> = HashMap()
             for(i in members){
                 var amount=0.0
@@ -183,9 +193,9 @@ class CreateActivity : BaseActivity() {
                 Toast.makeText(this,"Please assign amount to member(s)",Toast.LENGTH_SHORT).show()
                 return
             }
-            val paysplit = PaySplit(title=title,createdBy=loggedinUser, createdOn = System.currentTimeMillis().toString(), totalamount = totalSum, assignedTo = assignedTo, amountMembers = amountMembers)
+//            val paysplit = PaySplit(title=title,createdBy=loggedinUser, createdOn = System.currentTimeMillis().toString(), totalamount = totalSum, assignedTo = assignedTo, amountMembers = amountMembers)
             showProgressDialog("Creating Pay Split")
-            FirestoreClass().addPaySplit(this,paysplit)
+//            FirestoreClass().addPaySplit(this,paysplit)
         }else{
             if(title.isEmpty()){
                 binding.titlePaysplit.setError("Please add a title")
@@ -232,8 +242,18 @@ class CreateActivity : BaseActivity() {
 
     private fun openDialogCreateItem(pos : Int){
         //Creating Dialog
+
+
         val dialog = BottomSheetDialog(this)
         dialog.setContentView(R.layout.create_meal_layout)
+        dialog.setOnShowListener{
+            val dialog = it as BottomSheetDialog
+            val bs = dialog.findViewById<View>(R.id.meal_layout)
+            bs?.let{
+                dialog.behavior.peekHeight = it.height
+                it.parent.parent.requestLayout()
+            }
+        }
 
         //Populating members
         val rv = dialog.findViewById<RecyclerView>(R.id.rv_members_meal)
@@ -347,5 +367,7 @@ class CreateActivity : BaseActivity() {
 
 
     }
+    //testing
+
 
 }
