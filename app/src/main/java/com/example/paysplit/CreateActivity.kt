@@ -2,7 +2,9 @@ package com.example.paysplit
 
 import android.app.Dialog
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
@@ -10,21 +12,21 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.compose.material3.ModalBottomSheet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.paysplit.adapters.MealMembersAdapter
 import com.example.paysplit.adapters.MealsAdapter
 import com.example.paysplit.adapters.PaySplitMemberAdapter
+import com.example.paysplit.adapters.SearchMemberAdapter
 import com.example.paysplit.databinding.ActivityCreateBinding
 import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.models.Meal
 import com.example.paysplit.models.PaySplit
 import com.example.paysplit.models.PaySplitMember
 import com.example.paysplit.models.User
-import com.example.paysplit.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputLayout
+import com.google.auth.oauth2.GoogleCredentials
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
@@ -35,6 +37,7 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 
+
 class CreateActivity : BaseActivity() {
     private lateinit var binding : ActivityCreateBinding
     var members : ArrayList<PaySplitMember> = ArrayList()
@@ -44,8 +47,10 @@ class CreateActivity : BaseActivity() {
     private lateinit var loggedinUser: User
     private lateinit var mealPricePerMember : HashMap<String,Double>
     private val mealsList : ArrayList<Meal> = ArrayList()
+    private val searchUsers : ArrayList<User> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityCreateBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupActionBar()
@@ -77,20 +82,69 @@ class CreateActivity : BaseActivity() {
     private fun searchDialog(){
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.search_user_dialog)
+        val editText = dialog.findViewById<AppCompatEditText>(R.id.et_email_member)
+        editText.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(
+                p0: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int
+            ) {
+
+            }
+
+            override fun onTextChanged(
+                p0: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int
+            ) {
+                searchUsers.clear()
+                if(p0.toString().isNotEmpty()){
+                    FirestoreClass().getMemberDetails(this@CreateActivity,p0.toString()){
+                        dialog.findViewById<RecyclerView>(R.id.search_result_rv).layoutManager =
+                            LinearLayoutManager(this@CreateActivity)
+                        dialog.findViewById<RecyclerView>(R.id.search_result_rv).setHasFixedSize(true)
+                        val adapter = SearchMemberAdapter(this@CreateActivity, searchUsers)
+                        dialog.findViewById<RecyclerView>(R.id.search_result_rv).adapter = adapter
+                        adapter.setOnClickListener(object : SearchMemberAdapter.OnClickListener{
+                            override fun onClick(pos: Int) {
+                                foundmember(searchUsers[pos])
+                            }
+                        })
+                    }
+                }
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+        })
         dialog.findViewById<AppCompatButton>(R.id.btn_addmember).setOnClickListener {
-            val email  = dialog.findViewById<AppCompatEditText>(R.id.et_email_member).text.toString()
+
+            val email  = editText.text.toString()
+
             if(email.trim().isEmpty()){
                 dialog.findViewById<AppCompatEditText>(R.id.et_email_member).setError("Please fill this")
             }else{
                 if(membersVis.contains(email)) Toast.makeText(this@CreateActivity,"user already added",Toast.LENGTH_SHORT).show()
-                else FirestoreClass().getMemberDetails(this,email)
-                dialog.cancel()
+                else {
+
+
+                }
+
             }
         }
         dialog.setCancelable(true)
+        dialog.setOnDismissListener {
+            searchUsers.clear()
+        }
         dialog.show()
     }
     fun foundmember(user : User?){
+        searchUsers.clear()
         if(membersVis.contains(user!!.id)){
             Toast.makeText(this,"user already added",Toast.LENGTH_SHORT).show()
         }
@@ -104,6 +158,11 @@ class CreateActivity : BaseActivity() {
         populateMembers()}
 
     }
+    fun foundmembers(list : ArrayList<User>){
+        searchUsers.addAll(list)
+
+    }
+
     private fun populateMembers(){
         binding.rvMembers.visibility = View.VISIBLE
         binding.rvMembers.layoutManager = LinearLayoutManager(this)
@@ -180,7 +239,10 @@ class CreateActivity : BaseActivity() {
         val title = binding.titlePaysplit.text.toString()
         if(members.size>0 && title.isNotEmpty()){
             var totalSum=0.0
-//            val assignedTo = ArrayList<String>(membersVis)
+            val assignedTo = ArrayList<String>()
+            for(i in membersVis.values){
+                assignedTo.add(i.email)
+            }
             val amountMembers : HashMap<String,Double> = HashMap()
             for(i in members){
                 var amount=0.0
@@ -193,9 +255,9 @@ class CreateActivity : BaseActivity() {
                 Toast.makeText(this,"Please assign amount to member(s)",Toast.LENGTH_SHORT).show()
                 return
             }
-//            val paysplit = PaySplit(title=title,createdBy=loggedinUser, createdOn = System.currentTimeMillis().toString(), totalamount = totalSum, assignedTo = assignedTo, amountMembers = amountMembers)
+            val paysplit = PaySplit(title=title,createdBy=loggedinUser, createdOn = System.currentTimeMillis().toString(), totalamount = totalSum, assignedTo = assignedTo, amountMembers = amountMembers)
             showProgressDialog("Creating Pay Split")
-//            FirestoreClass().addPaySplit(this,paysplit)
+            FirestoreClass().addPaySplit(this,paysplit)
         }else{
             if(title.isEmpty()){
                 binding.titlePaysplit.setError("Please add a title")
@@ -210,6 +272,7 @@ class CreateActivity : BaseActivity() {
         for(i in usersToken){
             sendNotification(i)
         }
+        setResult(RESULT_OK)
         finish()
     }
     private fun openDialogEditMemberAmount(pos: Int, list : ArrayList<PaySplitMember>, adapter: PaySplitMemberAdapter,prevAmount : Double){
@@ -327,17 +390,20 @@ class CreateActivity : BaseActivity() {
     }
     //Notification work
     fun sendNotification(fcmtoken : String){
+        Toast.makeText(this@CreateActivity,"inside notify", Toast.LENGTH_SHORT).show()
         try{
             val jsonobj= JSONObject()
             val notiObj= JSONObject()
             notiObj.put("title","You have been added to a Pay Split")
             notiObj.put("body","${loggedinUser.name} added you to a Pay Split")
 
-            val dataObj : JSONObject = JSONObject()
+            val dataObj = JSONObject()
             dataObj.put("id",loggedinUser.id)
-            jsonobj.put("notification",notiObj)
-            jsonobj.put("data",dataObj)
-            jsonobj.put("to",fcmtoken)
+            val messageJSON = JSONObject()
+            messageJSON.put("token",fcmtoken)
+            messageJSON.put("notification",notiObj)
+            messageJSON.put("data",dataObj)
+            jsonobj.put("message",messageJSON)
             callApi(jsonobj)
         }catch (e : Exception){
             Log.e("Error Notify",e.message.toString())
@@ -349,17 +415,31 @@ class CreateActivity : BaseActivity() {
     fun callApi(jsonobj : JSONObject){
         val JSON : okhttp3.MediaType = "application/json; charset=utf-8".toMediaType()
         val client = OkHttpClient()
-        val url ="https://fcm.googleapis.com/fcm/send"
+        val url ="https://fcm.googleapis.com/v1/projects/pay-split-6f8c1/messages:send"
         val body = RequestBody.create(JSON,jsonobj.toString())
+        val inputStream = assets.open("pay-split-6f8c1-firebase-adminsdk-ii4sw-cf0d2b6b7d.json")
+
+        if (inputStream == null) {
+            Log.e("FCM File", "Service account file not found!")
+            return
+        }else Log.i("File found",inputStream.toString())
+
+
+        val credentials = GoogleCredentials
+            .fromStream(inputStream)
+            .createScoped(listOf("https://www.googleapis.com/auth/firebase.messaging"))
+        credentials.refresh()
+        val token = credentials.accessToken.tokenValue
+        Log.i("OAuth2 Token", token ?: "Token is null")
         val request : Request = Request.Builder()
             .url(url)
             .post(body)
-            .header("Authorization","Bearer ${Constants.apiKey}")
+            .header("Authorization","Bearer $token")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Toast.makeText(this@CreateActivity,"Failed",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CreateActivity,"Failed Notify",Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call, response: Response) {
             }

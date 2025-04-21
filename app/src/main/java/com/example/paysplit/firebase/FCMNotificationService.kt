@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.paysplit.MainActivity
@@ -23,6 +24,7 @@ class FCMNotificationService : FirebaseMessagingService() {
         super.onMessageReceived(message)
         message.notification?.let{
             val notify = message.notification
+            Log.i("FCM Notify", "Notification received:  - $message")
             sendNotification(notify!!.body.toString(),notify.title.toString())
 
         }
@@ -58,8 +60,10 @@ class FCMNotificationService : FirebaseMessagingService() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val channel = NotificationChannel(
                 channelid,"Channel Pay Split title",
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             )
+            channel.enableVibration(true)
+            channel.vibrationPattern = longArrayOf(1000, 1000, 1000, 1000)
             notificationmanager.createNotificationChannel(channel)
         }
         notificationmanager.notify(0,notificationbuilder.build())

@@ -41,15 +41,22 @@ class FirestoreClass {
 
         return currentUserID
     }
-    fun getMemberDetails(activity : CreateActivity,email : String){
+    fun getMemberDetails(activity: CreateActivity, email: String, function: () -> Unit){
         mFireStore.collection(Constants.Users)
-            .whereEqualTo("email",email)
+            .orderBy("name")
+            .startAt(email)
+            .endAt(email + "\uf8ff") // special character to simulate prefix range
             .get()
             .addOnSuccessListener {
                     it->
-                if(it.documents.size>0){
-                    val user= it.documents[0].toObject(User::class.java)
-                    activity.foundmember(user!!)
+                if(it.documents.isNotEmpty()){
+                    val list = ArrayList<User>()
+                    for(i in it.documents){
+                        val user = i.toObject(User::class.java)!!
+                        list.add(user)
+                    }
+                    activity.foundmembers(list)
+                    function()
                 }else{
                     Toast.makeText(activity,"no user found",Toast.LENGTH_SHORT).show()
                 }
@@ -125,7 +132,7 @@ class FirestoreClass {
             .addOnSuccessListener {
                 // Profile data is updated successfully.
                 Log.e(activity.javaClass.simpleName, "Profile Data updated successfully!")
-                Toast.makeText(activity,"FCM Token set",Toast.LENGTH_SHORT).show()
+//                Toast.makeText(activity,"FCM Token set",Toast.LENGTH_SHORT).show()
 
             }
             .addOnFailureListener { e ->

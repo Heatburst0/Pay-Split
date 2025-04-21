@@ -1,6 +1,7 @@
 package com.example.paysplit
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -8,17 +9,20 @@ import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.paysplit.databinding.ActivityMainBinding
 import com.example.paysplit.firebase.FirestoreClass
+import com.example.paysplit.fragments.HomeFragment
 import com.example.paysplit.models.User
 import com.example.paysplit.viewpager.ViewPagerAdapter
 import com.google.android.material.navigation.NavigationView
@@ -30,7 +34,11 @@ import java.net.URL
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+    companion object {
+        const val create_code=10
+    }
     private lateinit var binding: ActivityMainBinding
+    lateinit var homeFrag : HomeFragment
     private var auth : FirebaseAuth = FirebaseAuth.getInstance()
     private var prevMenuItem : MenuItem?=null
     lateinit var loggedinUser : User
@@ -38,7 +46,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
         setupActionBar()
         FirestoreClass().loadUserData(this)
         val adapter = ViewPagerAdapter(this)
@@ -118,26 +127,36 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.create_btn_drawer ->{
                 val intent = Intent(this, CreateActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                finish()
+                intent.putExtra("user",loggedinUser)
+                Toast.makeText(this@MainActivity,"In create btn",Toast.LENGTH_LONG).show()
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivityForResult(intent,create_code)
             }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Toast.makeText(this@MainActivity,"Outside if $requestCode $resultCode",Toast.LENGTH_LONG).show()
+        if(resultCode == RESULT_OK && requestCode == create_code){
+            Toast.makeText(this@MainActivity,"Working pay split",Toast.LENGTH_LONG).show()
+
+            homeFrag.setUser(loggedinUser,false)
+        }
+    }
     private fun setToken(){
-        if(loggedinUser.fcmtoken.isEmpty()){
+        if(loggedinUser.fcmtoken.isEmpty()) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener {
-                if(it.isSuccessful){
+                if (it.isSuccessful) {
                     val token = it.getResult()
-                    val hm : HashMap<String,Any> = HashMap()
-                    hm["fcmtoken"] =token
-                    FirestoreClass().updateUserProfileData(this,hm)
+                    val hm: HashMap<String, Any> = HashMap()
+                    hm["fcmtoken"] = token
+                    FirestoreClass().updateUserProfileData(this, hm)
                 }
             }
-
         }
+
 
     }
     fun setUserdata(user : User){
@@ -177,6 +196,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         return false
     }
+
+
+
 
 
 

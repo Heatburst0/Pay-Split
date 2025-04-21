@@ -1,5 +1,7 @@
 package com.example.paysplit.fragments
 
+import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -15,6 +17,7 @@ import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.paysplit.CreateActivity
 import com.example.paysplit.MainActivity
 import com.example.paysplit.adapters.PaySplitAdapter
@@ -37,13 +40,20 @@ import kotlinx.coroutines.runBlocking
  * create an instance of this fragment.
  */
 class HomeFragment : Fragment() {
+    companion object{
+        const val create_code=23
+    }
     private lateinit var binding : FragmentHomeBinding
     private lateinit var loggedinUser : User
     private var payeeUPIid : String?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding  = FragmentHomeBinding.inflate(layoutInflater)
-
+        binding.swipeLayout.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            FirestoreClass().getPaySplits(this, loggedinUser.email)
+            Toast.makeText(activity,"Refreshed", Toast.LENGTH_SHORT).show()
+            binding.swipeLayout.isRefreshing = false
+        })
         FirestoreClass().loadDataHomeFragment(this,false)
     }
 
@@ -57,22 +67,36 @@ class HomeFragment : Fragment() {
         binding.createBtn.setOnClickListener {
             val intent = Intent(activity,CreateActivity::class.java)
             intent.putExtra("user",(activity as MainActivity).loggedinUser)
-            startActivity(intent)
+            Toast.makeText(activity as MainActivity,"create btn in fragment",Toast.LENGTH_SHORT).show()
+            startActivityForResult(intent,create_code)
         }
 
         return binding.root
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode==RESULT_OK && requestCode ==create_code){
+            Toast.makeText(activity as MainActivity,"Working in fragment",Toast.LENGTH_SHORT).show()
+            FirestoreClass().getPaySplits(this, loggedinUser.email)
+        }
     }
     fun setPaySplits(list : ArrayList<PaySplit>){
         if(list.size>0){
             binding.revPaysplitsHome.visibility = View.VISIBLE
             val adapter = PaySplitAdapter(activity as MainActivity,this,list,loggedinUser)
+            (activity as MainActivity).homeFrag = this
             binding.revPaysplitsHome.layoutManager = LinearLayoutManager(activity as MainActivity)
             binding.revPaysplitsHome.setHasFixedSize(true)
             binding.revPaysplitsHome.adapter = adapter
             adapter.setOnClickListener(object : PaySplitAdapter.OnClickListener{
                 override fun onPayButton(createdby : User, amount: HashMap<String, Double>) {
 
-                    makePayment(createdby.name,amount[loggedinUser.id].toString())
+                    try {
+                        makePayment(createdby.name,amount[loggedinUser.id].toString())
+                    }catch (e: Exception){
+                        Toast.makeText(activity as MainActivity,e.message,Toast.LENGTH_SHORT).show()
+                    }
                 }
 
             })
