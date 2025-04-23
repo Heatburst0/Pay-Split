@@ -62,12 +62,13 @@ open class PaySplitAdapter(
             holder.itemView.setOnClickListener {
                 val originalHeight = holder.itemView.height
                 val paybtn = holder.itemView.findViewById<AppCompatButton>(R.id.btn_pay)
+                val viewPaybtn = holder.itemView.findViewById<AppCompatButton>(R.id.btn_viewPaySplit)
                 val valueAnimator : ValueAnimator
                 if(paybtn.isVisible){
 //                    paybtn.visibility = View.GONE
                      valueAnimator = ValueAnimator.ofInt(
                         originalHeight,
-                        originalHeight-(originalHeight*0.4135).toInt()
+                        originalHeight-(originalHeight*0.58333).toInt()
                     )
                     val a: Animation = AlphaAnimation(1.00f, 0.00f) // Fade out
                     a.setDuration(100)
@@ -75,8 +76,10 @@ open class PaySplitAdapter(
                     a.setAnimationListener(object : Animation.AnimationListener {
                         override fun onAnimationStart(animation: Animation?) {}
                         override fun onAnimationEnd(animation: Animation?) {
-                            paybtn.setVisibility(View.GONE)
-                            paybtn.setEnabled(false)
+                            paybtn.visibility = View.GONE
+                            paybtn.isEnabled = false
+                            viewPaybtn.visibility = View.GONE
+                            viewPaybtn.isEnabled = false
                         }
 
                         override fun onAnimationRepeat(animation: Animation?) {}
@@ -84,12 +87,15 @@ open class PaySplitAdapter(
 
                     paybtn.startAnimation(a)
                 }else{
-                        paybtn.setVisibility(View.VISIBLE)
-                        paybtn.setEnabled(true)
+
+                    viewPaybtn.visibility = View.VISIBLE
+                    viewPaybtn.isEnabled = true
+                    paybtn.visibility = View.VISIBLE
+                    paybtn.isEnabled = true
 //                        mIsViewExpanded = true
                         valueAnimator = ValueAnimator.ofInt(
                             originalHeight,
-                            originalHeight + (originalHeight*0.7).toInt()
+                            originalHeight + (originalHeight*1.4).toInt()
                         )
 
                 }
@@ -110,6 +116,11 @@ open class PaySplitAdapter(
                     onClickListener!!.onPayButton(ps.createdBy,ps.amountMembers)
                 }
             }
+            holder.itemView.findViewById<AppCompatButton>(R.id.btn_viewPaySplit).setOnClickListener {
+                if(onClickListener!=null){
+                    onClickListener!!.onViewPaySplitButton(ps.createdBy,ps.amountMembers)
+                }
+            }
 
         }
 
@@ -119,6 +130,7 @@ open class PaySplitAdapter(
     }
     interface OnClickListener{
         fun onPayButton(createdby : User,amount : HashMap<String,Double>)
+        fun onViewPaySplitButton(createdby : User,amount : HashMap<String,Double>)
     }
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 

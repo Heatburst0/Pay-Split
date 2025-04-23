@@ -97,6 +97,16 @@
             android:layout_marginTop="10dp"
             android:visibility="gone"
             tools:visibility="visible"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_viewPaySplit"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/btn_bg2"
+            android:text="View Pay Split"
+            android:textColor="@color/blue"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            tools:visibility="visible"/>
     </LinearLayout>
 
 

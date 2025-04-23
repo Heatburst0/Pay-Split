@@ -12,19 +12,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.example.paysplit.CreateActivity
 import com.example.paysplit.MainActivity
+import com.example.paysplit.R
 import com.example.paysplit.adapters.PaySplitAdapter
 import com.example.paysplit.databinding.FragmentHomeBinding
 import com.example.paysplit.firebase.FirestoreClass
 import com.example.paysplit.models.PaySplit
 import com.example.paysplit.models.User
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import dev.shreyaspatil.easyupipayment.EasyUpiPayment
 import dev.shreyaspatil.easyupipayment.listener.PaymentStatusListener
 import dev.shreyaspatil.easyupipayment.model.PaymentApp
@@ -97,6 +102,25 @@ class HomeFragment : Fragment() {
                     }catch (e: Exception){
                         Toast.makeText(activity as MainActivity,e.message,Toast.LENGTH_SHORT).show()
                     }
+                }
+
+                override fun onViewPaySplitButton(createdby: User, amount: HashMap<String, Double>) {
+                    val dialog = BottomSheetDialog(activity as MainActivity)
+                    dialog.setContentView(R.layout.view_paysplit)
+                    dialog.setCancelable(true)
+                    val username = dialog.findViewById<TextView>(R.id.username_member_simple)
+                    username?.text = createdby.name
+                    val email = dialog.findViewById<TextView>(R.id.email_member_simple)
+                    email?.text = createdby.email
+                    if(createdby.image.isNotEmpty()){
+                        Glide
+                            .with(context as MainActivity)
+                            .load(createdby.image)
+                            .centerCrop()
+                            .placeholder(R.drawable.ic_user_place_holder)
+                            .into(dialog.findViewById<ImageView>(R.id.iv_member_user_image_simple)!!)
+                    }
+                    dialog.show()
                 }
 
             })

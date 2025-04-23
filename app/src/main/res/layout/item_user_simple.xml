@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:layout_margin="5dp"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:weightSum="3">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_member_user_image_simple"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="desc"
+        android:src="@drawable/ic_user_place_holder" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="3dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/username_member_simple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:fontFamily="sans-serif-black"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            />
+        <TextView
+            android:id="@+id/email_member_simple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="E mail"
+            android:textStyle="normal"
+            android:textSize="12sp"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/black"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

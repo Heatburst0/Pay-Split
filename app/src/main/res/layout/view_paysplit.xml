@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:padding="10dp">
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,6 +36,21 @@
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/blue"/>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Created By"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/black"/>
+        <include
+            layout="@layout/item_user_simple"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="120dp"

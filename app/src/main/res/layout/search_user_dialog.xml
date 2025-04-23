@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:padding="10dp"
+    android:padding="10dp"  
     android:gravity="center"
-    android:background="@color/white"
+    android:background="@drawable/btn_bg2_black"
     android:layout_height="wrap_content">
     <TextView
         android:id="@+id/dialog_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Enter the user's E-mail"
+        android:text="Enter the user's Username"
         android:textSize="16sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -26,7 +26,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
         android:backgroundTint="@color/white"
-        android:hint="Email ID"
+        android:hint="Username"
         android:textColorHint="#636363"
         app:boxStrokeColor="@color/black">
         <androidx.appcompat.widget.AppCompatEditText

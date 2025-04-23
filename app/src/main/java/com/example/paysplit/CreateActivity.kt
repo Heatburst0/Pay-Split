@@ -82,7 +82,17 @@ class CreateActivity : BaseActivity() {
     private fun searchDialog(){
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.search_user_dialog)
+        dialog.findViewById<AppCompatButton>(R.id.btn_addmember).visibility = View.GONE
         val editText = dialog.findViewById<AppCompatEditText>(R.id.et_email_member)
+
+        liveSearchingUser(editText,dialog)
+        dialog.setCancelable(true)
+        dialog.setOnDismissListener {
+            searchUsers.clear()
+        }
+        dialog.show()
+    }
+    private fun liveSearchingUser(editText: AppCompatEditText,dialog: Dialog){
         editText.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(
                 p0: CharSequence?,
@@ -102,15 +112,18 @@ class CreateActivity : BaseActivity() {
                 searchUsers.clear()
                 if(p0.toString().isNotEmpty()){
                     FirestoreClass().getMemberDetails(this@CreateActivity,p0.toString()){
-                        dialog.findViewById<RecyclerView>(R.id.search_result_rv).layoutManager =
+                        val searchResultRV = dialog.findViewById<RecyclerView>(R.id.search_result_rv)
+                        searchResultRV.layoutManager =
                             LinearLayoutManager(this@CreateActivity)
-                        dialog.findViewById<RecyclerView>(R.id.search_result_rv).setHasFixedSize(true)
+                        searchResultRV.setHasFixedSize(true)
                         val adapter = SearchMemberAdapter(this@CreateActivity, searchUsers)
-                        dialog.findViewById<RecyclerView>(R.id.search_result_rv).adapter = adapter
+                        searchResultRV.adapter = adapter
                         adapter.setOnClickListener(object : SearchMemberAdapter.OnClickListener{
                             override fun onClick(pos: Int) {
                                 foundmember(searchUsers[pos])
+                                dialog.dismiss()
                             }
+
                         })
                     }
                 }
@@ -122,26 +135,6 @@ class CreateActivity : BaseActivity() {
             }
 
         })
-        dialog.findViewById<AppCompatButton>(R.id.btn_addmember).setOnClickListener {
-
-            val email  = editText.text.toString()
-
-            if(email.trim().isEmpty()){
-                dialog.findViewById<AppCompatEditText>(R.id.et_email_member).setError("Please fill this")
-            }else{
-                if(membersVis.contains(email)) Toast.makeText(this@CreateActivity,"user already added",Toast.LENGTH_SHORT).show()
-                else {
-
-
-                }
-
-            }
-        }
-        dialog.setCancelable(true)
-        dialog.setOnDismissListener {
-            searchUsers.clear()
-        }
-        dialog.show()
     }
     fun foundmember(user : User?){
         searchUsers.clear()
